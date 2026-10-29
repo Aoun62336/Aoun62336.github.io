@@ -1,16 +1,193 @@
 ---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+
+import portrait from "../assets/aoun-portrait.png";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow hero-intro">
+          CLOUD ENGINEERING / DEVOPS / INFRASTRUCTURE
+        </p>
+
+        <h1>
+          <span class="line">Hi, I'm</span>
+          <span class="line serif-accent">Aoun Md.</span>
+        </h1>
+
+        <p class="hero-description">
+          I work with AWS infrastructure, containers, Kubernetes, CI/CD, and
+          automation. My projects focus on how applications are built, deployed,
+          secured, and operated.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="/work/">
+            Explore my work
+            <span aria-hidden="true">↗</span>
+          </a>
+
+          <a
+            class="button button-secondary"
+            href="https://github.com/Aoun62336"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View GitHub
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="hero-footnote" aria-label="Focus areas">
+          <span>AWS & TERRAFORM</span>
+          <span>KUBERNETES & GITOPS</span>
+          <span>CI/CD & OBSERVABILITY</span>
+        </div>
+      </div>
+
+      <div class="portrait-shell">
+        <div class="portrait-frame">
+          <Image
+            src={portrait}
+            alt="Portrait of Aoun Md."
+            format="webp"
+            widths={[360, 540, 720, 900, 1122]}
+            sizes="(max-width: 760px) 90vw, 40vw"
+            priority
+          />
+        </div>
+
+        <div class="portrait-label">
+          <strong>Cloud & DevOps Engineer</strong>
+          <small>
+            Based in India
+            <br />
+            Open to relevant opportunities
+          </small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border" id="work">
+    <div class="container">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">01 / SELECTED ENGINEERING WORK</p>
+
+        <h2>
+          Systems I've
+          <span class="serif-accent">built and worked on.</span>
+        </h2>
+
+        <p>
+          A closer look at the infrastructure, delivery pipelines, automation,
+          security, and operational decisions behind my projects.
+        </p>
+      </div>
+
+      <div class="project-list">
+        {
+          projects.map((project, index) => (
+            <ProjectCard project={project} index={index} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border">
+    <div class="container">
+      <div class="section-heading" data-reveal>
+        <p class="eyebrow">02 / HOW I WORK</p>
+
+        <h2>
+          Engineering across the
+          <span class="serif-accent">delivery lifecycle.</span>
+        </h2>
+
+        <p>
+          My work connects infrastructure, application delivery, and the systems
+          used to understand and troubleshoot running workloads.
+        </p>
+      </div>
+
+      <div class="expertise-grid">
+        <article class="expertise-card" data-reveal>
+          <span class="expertise-index">01 / INFRASTRUCTURE</span>
+
+          <h3>Cloud & infrastructure</h3>
+
+          <p>
+            AWS networking, EC2, EKS, RDS, IAM, S3, and Terraform infrastructure
+            definitions.
+          </p>
+        </article>
+
+        <article class="expertise-card" data-reveal>
+          <span class="expertise-index">02 / DELIVERY</span>
+
+          <h3>CI/CD & GitOps</h3>
+
+          <p>
+            GitHub Actions, Jenkins, Docker, security checks, Helm, and Argo CD
+            deployment workflows.
+          </p>
+        </article>
+
+        <article class="expertise-card" data-reveal>
+          <span class="expertise-index">03 / OPERATIONS</span>
+
+          <h3>Reliability & observability</h3>
+
+          <p>
+            Health checks, logs, metrics, traces, deployment verification, and
+            structured troubleshooting.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border">
+    <div class="container info-grid">
+      <div data-reveal>
+        <p class="eyebrow">03 / A LITTLE ABOUT ME</p>
+
+        <h2 class="page-title">
+          An engineer who likes to understand
+          <span class="serif-accent">the whole system.</span>
+        </h2>
+      </div>
+
+      <div data-reveal>
+        <p class="page-description">
+          I'm an MCA graduate with software development and cloud support
+          internship experience. I've also worked on independent Cloud and
+          DevOps implementations, including AWS infrastructure, Kubernetes
+          deployments, CI/CD pipelines, and monitoring.
+        </p>
+
+        <p class="text-muted">
+          I'm looking for an opportunity where I can contribute to
+          infrastructure and delivery work while learning from engineers with
+          real operational experience.
+        </p>
+
+        <a class="button button-secondary" href="/about/">
+          More about me
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

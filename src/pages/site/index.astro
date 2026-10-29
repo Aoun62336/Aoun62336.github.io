@@ -1,0 +1,102 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="How This Site Works | Aoun Md."
+  description="A look at the architecture and engineering decisions behind Aoun Md.'s personal portfolio."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">BEHIND THE WEBSITE / ENGINEERING NOTES</p>
+
+      <h1 class="page-title">
+        Small infrastructure.
+        <span class="serif-accent">Intentional decisions.</span>
+      </h1>
+
+      <p class="page-description">
+        This website is also an opportunity to apply the same engineering
+        principles I use in larger projects: clear architecture, automation,
+        security, performance, and maintainability.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-border">
+    <div class="container">
+      <article class="case-article">
+        <h2>Why a static architecture?</h2>
+
+        <p>
+          A professional portfolio primarily delivers content. It does not need
+          a persistent application server, database, or Kubernetes cluster.
+        </p>
+
+        <p>
+          I chose Astro to generate pages at build time and keep the amount of
+          JavaScript sent to visitors small.
+        </p>
+
+        <h2>Design and content</h2>
+
+        <p>
+          The website uses a custom visual system, responsive layouts,
+          self-hosted typography, optimized images, and project case studies
+          maintained as Markdown.
+        </p>
+
+        <p>
+          The case studies document the actual engineering work behind my
+          projects rather than relying only on a list of technologies.
+        </p>
+
+        <h2>Hosting</h2>
+
+        <p>
+          The site is designed for GitHub Pages, with a static build and no
+          continuously running cloud infrastructure.
+        </p>
+
+        <p>
+          This keeps hosting costs low and avoids operational complexity that
+          would not improve the experience.
+        </p>
+
+        <h2>Automation and quality</h2>
+
+        <p>
+          The release workflow will include build validation, content checks,
+          accessibility testing, and deployment through GitHub Actions.
+        </p>
+
+        <p>
+          The goal is to keep the publication process repeatable while making
+          future changes easy to review.
+        </p>
+
+        <h2>Performance and accessibility</h2>
+
+        <p>
+          The implementation prioritizes readable content, keyboard navigation,
+          responsive layouts, optimized photography, and reduced-motion
+          preferences.
+        </p>
+
+        <p>
+          Visual effects should support the content. They should not delay
+          access to project information or make the website harder to use.
+        </p>
+
+        <h2>Source code</h2>
+
+        <p>
+          The website source is maintained in a public GitHub repository:
+          <a href="https://github.com/Aoun62336/Aoun62336.github.io">
+            Aoun62336.github.io
+          </a>.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

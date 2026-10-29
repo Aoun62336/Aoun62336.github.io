@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectVisual from './ProjectVisual.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+
+const number = String(index + 1).padStart(2, '0');
+---
+
+<article class="project-card" data-reveal>
+  <div
+    class:list={[
+      'project-visual',
+      `project-visual--${project.id}`,
+    ]}
+  >
+    <ProjectVisual projectId={project.id} />
+  </div>
+
+  <div class="project-details">
+    <span class="project-number">
+      {number} / {project.data.category}
+    </span>
+
+    <h3>{project.data.title}</h3>
+
+    <p>{project.data.description}</p>
+
+    <div class="tag-list" aria-label="Technologies">
+      {
+        project.data.technologies.slice(0, 5).map((technology) => (
+          <span class="tag">{technology}</span>
+        ))
+      }
+    </div>
+
+    <a class="project-link" href={`/work/${project.id}/`}>
+      Read case study
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</article>

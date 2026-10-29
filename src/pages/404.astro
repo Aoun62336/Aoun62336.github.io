@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page Not Found | Aoun Md."
+  description="The requested page could not be found."
+>
+  <section class="section">
+    <div
+      class="container"
+      style="min-height: 55vh; display: flex; flex-direction: column; justify-content: center;"
+    >
+      <p class="eyebrow">ERROR / 404</p>
+
+      <h1 class="page-title">
+        This route
+        <span class="serif-accent">doesn't exist.</span>
+      </h1>
+
+      <p class="page-description">
+        The page may have moved, or the address might be incorrect.
+      </p>
+
+      <div style="margin-top: 22px;">
+        <a class="button button-primary" href="/"> Return home ↗ </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

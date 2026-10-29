@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import logoSrc from '../assets/logo.jpg';
+
+const pathname = Astro.url.pathname;
+
+const links = [
+  { href: "/work/", label: "Work" },
+  { href: "/about/", label: "About" },
+  { href: "/site/", label: "This Site" },
+];
+
+const isActive = (href: string) => pathname.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Aoun Md., homepage">
+      <span class="brand-symbol">
+        <Image
+          src={logoSrc}
+          alt="AM monogram logo"
+          width={36}
+          height={36}
+          loading="eager"
+          style="display:block;width:100%;height:100%;object-fit:cover;"
+        />
+      </span>
+      <span class="brand-name">AOUN MD.</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Main navigation">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a class="header-contact" href="mailto:aounmd74@gmail.com">
+      Let's talk
+      <span aria-hidden="true">↗</span>
+    </a>
+
+    <details class="mobile-nav">
+      <summary aria-label="Open navigation menu">
+        Menu <span aria-hidden="true">+</span>
+      </summary>
+
+      <nav aria-label="Mobile navigation">
+        {links.map((link) => <a href={link.href}>{link.label}</a>)}
+
+        <a href="mailto:aounmd74@gmail.com">Contact</a>
+      </nav>
+    </details>
+  </div>
+</header>

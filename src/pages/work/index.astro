@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Engineering Work | Aoun Md."
+  description="Engineering case studies covering AWS infrastructure, Kubernetes, Terraform, CI/CD, GitOps, container deployment, and serverless applications."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">SELECTED PROJECTS / ENGINEERING CASE STUDIES</p>
+
+      <h1 class="page-title">
+        The work behind
+        <span class="serif-accent">the systems.</span>
+      </h1>
+
+      <p class="page-description">
+        These projects document what I implemented, the decisions behind the
+        architecture, the tools I used, and how the systems were validated.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-border" style="padding-block: 60px 110px;">
+    <div class="container project-list">
+      {
+        projects.map((project, index) => (
+          <ProjectCard project={project} index={index} />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

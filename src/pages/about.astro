@@ -1,0 +1,207 @@
+---
+import { Image } from "astro:assets";
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import portrait from "../assets/aoun-portrait.png";
+---
+
+<BaseLayout
+  title="About | Aoun Md."
+  description="Learn about Aoun Md.'s background, engineering experience, education, and selected technical credentials."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">ABOUT / BACKGROUND & EXPERIENCE</p>
+
+      <h1 class="page-title">
+        A little more
+        <span class="serif-accent">about me.</span>
+      </h1>
+
+      <p class="page-description">
+        I'm an MCA graduate working toward a career in Cloud and DevOps
+        Engineering. My experience includes software development, cloud support,
+        and hands-on infrastructure and automation projects.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-border section">
+    <div class="container info-grid">
+      <div>
+        <div class="about-portrait">
+          <Image
+            src={portrait}
+            alt="Aoun Md."
+            format="webp"
+            widths={[360, 540, 720, 900]}
+            sizes="(max-width: 760px) 90vw, 400px"
+            loading="lazy"
+          />
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow">MY BACKGROUND</p>
+
+        <h2
+          style="font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 500; letter-spacing: -0.06em;"
+        >
+          From application code to the infrastructure
+          <span class="serif-accent">behind it.</span>
+        </h2>
+
+        <p class="text-muted">
+          I started with software development and gained experience working with
+          a full-stack application during my internship at Noorisys
+          Technologies.
+        </p>
+
+        <p class="text-muted">
+          My later independent work focused more deeply on AWS, Terraform,
+          Kubernetes, Jenkins, GitHub Actions, GitOps, security scanning, and
+          observability.
+        </p>
+
+        <p class="text-muted">
+          I enjoy understanding how the pieces connect, from a code change to
+          the pipeline that validates it, the infrastructure that runs it, and
+          the tools used to investigate problems.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">EXPERIENCE</p>
+
+        <h2>
+          Practical work,
+          <span class="serif-accent">different perspectives.</span>
+        </h2>
+      </div>
+
+      <div class="detail-list">
+        <div class="detail-item">
+          <strong>DevOps Intern · Elevate Labs</strong>
+          <span>October 2026 to present</span>
+
+          <p>
+            Worked on CI/CD automation with GitHub Actions and Jenkins,
+            container image publication, security checks, Docker Compose
+            deployments, AWS EC2, Terraform, and deployment verification using
+            the RenewGrid application.
+          </p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Software Developer Intern · Noorisys Technologies</strong>
+          <span>February to May 2026</span>
+
+          <p>
+            Contributed to AssembleMonitor, a construction management
+            application. Later developed its independent AWS and DevOps
+            implementation.
+          </p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Cloud Support Intern · CanveX</strong>
+          <span>January to March 2025</span>
+
+          <p>
+            Cloud support internship experience that contributed to my interest
+            in infrastructure and cloud operations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border">
+    <div class="container info-grid">
+      <div class="info-panel">
+        <p class="eyebrow">EDUCATION</p>
+
+        <h2>Academic background</h2>
+
+        <div class="detail-list">
+          <div class="detail-item">
+            <strong>Master of Computer Applications</strong>
+            <span>2024 to 2026</span>
+          </div>
+
+          <div class="detail-item">
+            <strong>B.Sc. Computer Science</strong>
+            <span>2021 to 2024 · Savitribai Phule Pune University</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-panel">
+        <p class="eyebrow">SELECTED CREDENTIALS</p>
+
+        <h2>Courses and certifications</h2>
+
+        <div class="detail-list">
+          <div class="detail-item">
+            <strong
+              >Oracle Cloud Infrastructure 2025 Certified Foundations Associate</strong
+            >
+            <span>Oracle · 2025</span>
+          </div>
+
+          <div class="detail-item">
+            <strong
+              >Oracle Cloud Infrastructure 2025 Certified AI Foundations
+              Associate</strong
+            >
+            <span>Oracle · 2025</span>
+          </div>
+
+          <div class="detail-item">
+            <strong>Ethical Hacking</strong>
+            <span>NPTEL · 2025</span>
+          </div>
+
+          <div class="detail-item">
+            <strong>Web Technology</strong>
+            <span>SWAYAM · Completed 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border">
+    <div class="container info-grid">
+      <div>
+        <p class="eyebrow">WHAT I'M LOOKING FOR</p>
+
+        <h2 class="page-title">
+          The next
+          <span class="serif-accent">chapter.</span>
+        </h2>
+      </div>
+
+      <div>
+        <p class="page-description">
+          I'm interested in Cloud Engineering, DevOps, infrastructure, and
+          junior platform engineering opportunities.
+        </p>
+
+        <p class="text-muted">
+          I'm open to relevant roles in India and international or remote
+          opportunities, depending on eligibility and work authorization
+          requirements.
+        </p>
+
+        <a class="button button-primary" href="mailto:aounmd74@gmail.com">
+          Get in touch ↗
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
