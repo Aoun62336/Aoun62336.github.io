@@ -169,7 +169,10 @@ for (const route of routes) {
     // Wait for entrance transitions (such as data-reveal animations) to finish settling
     await page.evaluate(() => {
       return Promise.all(
-        document.getAnimations().map((animation) => animation.finished),
+        document
+          .getAnimations()
+          .filter((animation) => animation.timeline === document.timeline)
+          .map((animation) => animation.finished),
       );
     });
 
@@ -187,9 +190,9 @@ for (const route of routes) {
 }
 
 const evidenceCases = [
-  { slug: 'assemblemonitor', imageCount: 3 },
-  { slug: 'renewgrid', imageCount: 3 },
-  { slug: 'callmissed', imageCount: 3 },
+  { slug: 'assemblemonitor', imageCount: 5 },
+  { slug: 'renewgrid', imageCount: 5 },
+  { slug: 'callmissed', imageCount: 5 },
 ];
 
 for (const { slug, imageCount } of evidenceCases) {

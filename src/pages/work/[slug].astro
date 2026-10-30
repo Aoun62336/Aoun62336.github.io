@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from "astro:content";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CaseContents from "../../components/CaseContents.astro";
+import EngineeringStory from "../../components/EngineeringStory.astro";
 import EngineeringEvidence from "../../components/EngineeringEvidence.astro";
 
 export async function getStaticPaths() {
@@ -78,6 +79,8 @@ const { Content, headings } = await render(entry);
     </div>
 
     <CaseContents headings={headings} />
+
+    <EngineeringStory projectId={entry.id} />
 
     <EngineeringEvidence projectId={entry.id} />
 
