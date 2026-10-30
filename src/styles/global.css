@@ -1674,3 +1674,39 @@ p {
     margin-top: 46px;
   }
 }
+
+/* Credential metadata */
+
+.detail-item > span {
+  display: block;
+  margin-top: 5px;
+  line-height: 1.65;
+}
+
+.detail-item > strong {
+  line-height: 1.5;
+}
+
+/* Expertise evidence links */
+
+.expertise-evidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--plum);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.expertise-evidence span {
+  color: var(--plum);
+}
+
+.expertise-evidence:hover,
+.expertise-evidence:focus-visible {
+  color: var(--plum);
+}

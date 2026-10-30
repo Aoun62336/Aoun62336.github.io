@@ -97,10 +97,53 @@ Preview the production build:
 npm run preview
 ```
 
+## Portfolio content
+
+The website includes:
+
+- A professional introduction and downloadable resume.
+- Dedicated engineering case studies for AssembleMonitor, RenewGrid, and CallMissed AI Workspace.
+- Source-backed architecture diagrams and project evidence.
+- An interactive architecture explorer for AssembleMonitor.
+- Professional experience, education, and selected credentials.
+
+The project descriptions distinguish documented implementation from live production operation.
+
+## Design and accessibility
+
+The visual system uses a custom Nocturne Plum palette, self-hosted typography, responsive layouts, and optimized images.
+
+Interactions are built primarily with native browser APIs and CSS. The website supports keyboard navigation, semantic controls, and reduced-motion preferences.
+
+## Social sharing
+
+Social-preview images are generated from source code using Sharp.
+
+To regenerate them:
+
+```bash
+node scripts/generate-social-images.mjs
+```
+
+The production build also generates these images automatically.
+
+## Quality checks
+
+Run:
+
+```bash
+npm run check
+npm run build
+npm run test:e2e
+```
+
+These checks cover the Astro project, static build, navigation, accessibility, responsive behavior, project images, resume availability, and interactive components.
+
 ## Deployment
 
-GitHub Actions validates pull requests and deploys the static Astro
-build to GitHub Pages after checks pass on `master`.
+GitHub Actions validates and publishes the static Astro output to GitHub Pages.
+
+No backend, database, or continuously running cloud infrastructure is required for the portfolio itself.
 
 ## Contact
 

@@ -1,5 +1,28 @@
-import { test, expect } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+
+const test = base.extend({
+  request: async ({ request }, use) => {
+    const wrapped = new Proxy(request, {
+      get(target, prop, receiver) {
+        const orig = Reflect.get(target, prop, receiver);
+        if (typeof orig === 'function') {
+          return (...args: any[]) => {
+            if (
+              typeof args[0] === 'string' &&
+              args[0].startsWith('https://aoun62336.github.io/')
+            ) {
+              args[0] = args[0].replace('https://aoun62336.github.io/', '/');
+            }
+            return orig.apply(target, args);
+          };
+        }
+        return orig;
+      },
+    });
+    await use(wrapped);
+  },
+});
 
 const routes = [
   '/',
@@ -387,5 +410,200 @@ test('case studies fit narrow mobile screens', async ({ page }) => {
 
       expect(role!.y).toBeLessThan(period!.y);
     }
+  }
+});
+
+test("current resume is available as a PDF", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/");
+
+  const resumeLink = page.getByRole("link", {
+    name: /Download resume/i,
+  });
+
+  await expect(resumeLink).toBeVisible();
+
+  await expect(resumeLink).toHaveAttribute(
+    "href",
+    "/resume/Aoun_MD_Resume.pdf",
+  );
+
+  const response = await request.get(
+    "/resume/Aoun_MD_Resume.pdf",
+  );
+
+  expect(response.status()).toBe(200);
+
+  const contentType =
+    response.headers()["content-type"] ?? "";
+
+  expect(contentType).toContain("application/pdf");
+
+  const bytes = await response.body();
+
+  expect(
+    bytes.subarray(0, 4).toString("ascii"),
+  ).toBe("%PDF");
+});
+
+test("social preview metadata and images are valid", async ({
+  page,
+  request,
+}) => {
+  const pages = [
+    {
+      route: "/",
+      image: "home.png",
+    },
+    {
+      route: "/work/assemblemonitor/",
+      image: "assemblemonitor.png",
+    },
+    {
+      route: "/work/renewgrid/",
+      image: "renewgrid.png",
+    },
+    {
+      route: "/work/callmissed/",
+      image: "callmissed.png",
+    },
+  ];
+
+  for (const item of pages) {
+    await page.goto(item.route);
+
+    const imageURL = await page
+      .locator('meta[property="og:image"]')
+      .getAttribute("content");
+
+    expect(imageURL).toBe(
+      `https://aoun62336.github.io/og/${item.image}`,
+    );
+
+    const response = await request.get(imageURL!);
+
+    expect(response.status()).toBe(200);
+
+    const bytes = await response.body();
+
+    expect(
+      bytes.subarray(0, 8).toString("hex"),
+    ).toBe("89504e470d0a1a0a");
+  }
+});
+
+test("architecture explorer switches between three views", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const explorer = page.locator(
+    "[data-architecture-explorer]",
+  );
+
+  await expect(explorer).toBeVisible();
+
+  const tabs = explorer.getByRole("tab");
+
+  await expect(tabs).toHaveCount(3);
+
+  await expect(tabs.nth(0)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+
+  await tabs.nth(1).click();
+
+  await expect(tabs.nth(1)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+
+  await expect(
+    explorer.getByRole("tabpanel", {
+      name: /CI\/CD and GitOps/i,
+    }),
+  ).toBeVisible();
+
+  await tabs.nth(2).click();
+
+  await expect(tabs.nth(2)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+
+  await expect(
+    explorer.getByRole("tabpanel", {
+      name: /Observability/i,
+    }),
+  ).toBeVisible();
+});
+
+test("architecture explorer supports keyboard navigation", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const explorer = page.locator(
+    "[data-architecture-explorer]",
+  );
+
+  const tabs = explorer.getByRole("tab");
+
+  await tabs.nth(0).focus();
+
+  await page.keyboard.press("ArrowRight");
+
+  await expect(tabs.nth(1)).toBeFocused();
+
+  await expect(tabs.nth(1)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+
+  await page.keyboard.press("End");
+
+  await expect(tabs.nth(2)).toBeFocused();
+
+  await page.keyboard.press("Home");
+
+  await expect(tabs.nth(0)).toBeFocused();
+
+  await expect(tabs.nth(0)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+});
+
+test("architecture explorer does not overflow mobile screens", async ({
+  page,
+}) => {
+  for (const width of [320, 360, 390, 768]) {
+    await page.setViewportSize({
+      width,
+      height: 800,
+    });
+
+    await page.goto("/");
+
+    const explorer = page.locator(
+      "[data-architecture-explorer]",
+    );
+
+    await expect(explorer).toBeVisible();
+
+    const overflow = await page.evaluate(() => {
+      return (
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth
+      );
+    });
+
+    expect(
+      overflow,
+      `Unexpected page overflow at ${width}px`,
+    ).toBeLessThanOrEqual(1);
   }
 });

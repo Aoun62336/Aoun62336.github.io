@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import ArchitectureExplorer from "../components/ArchitectureExplorer.astro";
 
 import portrait from "../assets/aoun-portrait.png";
 
@@ -39,11 +40,10 @@ const projects = (await getCollection("projects")).sort(
 
           <a
             class="button button-secondary"
-            href="https://github.com/Aoun62336"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/resume/Aoun_MD_Resume.pdf"
+            download="Aoun_MD_Resume.pdf"
           >
-            View GitHub
+            Download resume
             <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -105,10 +105,12 @@ const projects = (await getCollection("projects")).sort(
     </div>
   </section>
 
+  <ArchitectureExplorer />
+
   <section class="section section-border">
     <div class="container">
       <div class="section-heading" data-reveal>
-        <p class="eyebrow">02 / HOW I WORK</p>
+        <p class="eyebrow">03 / HOW I WORK</p>
 
         <h2>
           Engineering across the
@@ -131,6 +133,14 @@ const projects = (await getCollection("projects")).sort(
             AWS networking, EC2, EKS, RDS, IAM, S3, and Terraform infrastructure
             definitions.
           </p>
+
+          <a
+            class="expertise-evidence"
+            href="/work/assemblemonitor/"
+          >
+            See AWS implementation
+            <span aria-hidden="true">↗</span>
+          </a>
         </article>
 
         <article class="expertise-card" data-reveal>
@@ -142,6 +152,14 @@ const projects = (await getCollection("projects")).sort(
             GitHub Actions, Jenkins, Docker, security checks, Helm, and Argo CD
             deployment workflows.
           </p>
+
+          <a
+            class="expertise-evidence"
+            href="/work/renewgrid/"
+          >
+            See delivery engineering
+            <span aria-hidden="true">↗</span>
+          </a>
         </article>
 
         <article class="expertise-card" data-reveal>
@@ -153,6 +171,14 @@ const projects = (await getCollection("projects")).sort(
             Health checks, logs, metrics, traces, deployment verification, and
             structured troubleshooting.
           </p>
+
+          <a
+            class="expertise-evidence"
+            href="/work/assemblemonitor/"
+          >
+            See observability work
+            <span aria-hidden="true">↗</span>
+          </a>
         </article>
       </div>
     </div>
@@ -161,7 +187,7 @@ const projects = (await getCollection("projects")).sort(
   <section class="section section-border">
     <div class="container info-grid">
       <div data-reveal>
-        <p class="eyebrow">03 / A LITTLE ABOUT ME</p>
+        <p class="eyebrow">04 / A LITTLE ABOUT ME</p>
 
         <h2 class="page-title">
           An engineer who likes to understand
