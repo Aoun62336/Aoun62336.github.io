@@ -277,4 +277,66 @@ const headingId = `engineering-evidence-${projectId}`;
       padding: 0.5rem;
     }
   }
+
+  /* Phase 4: compact technical gallery on mobile */
+
+  @media (max-width: 600px) {
+
+    .engineering-evidence {
+      margin-top: 48px;
+      margin-bottom: 56px;
+    }
+
+    .engineering-evidence__heading {
+      margin-bottom: 22px;
+    }
+
+    .engineering-evidence__heading h2 {
+      font-size: clamp(1.65rem, 7vw, 2.1rem);
+      line-height: 1.18;
+    }
+
+    .engineering-evidence__heading > p:last-child {
+      font-size: 0.93rem;
+      line-height: 1.7;
+    }
+
+    .engineering-evidence__list {
+      gap: 24px;
+    }
+
+    .engineering-evidence__item {
+      border-radius: 12px;
+    }
+
+    .engineering-evidence__topline {
+      padding: 12px 14px;
+      font-size: 0.63rem;
+    }
+
+    .engineering-evidence__image-link {
+      padding: 8px;
+    }
+
+    .engineering-evidence__caption {
+      padding: 18px;
+    }
+
+    .engineering-evidence__caption h3 {
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .engineering-evidence__caption p {
+      font-size: 0.89rem;
+      line-height: 1.72;
+    }
+
+    .engineering-evidence__caption a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+  }
 </style>

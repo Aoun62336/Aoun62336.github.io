@@ -279,3 +279,113 @@ test('project card hover works after scroll reveal', async ({
     })
     .toBeLessThan(-3);
 });
+
+
+test('all case studies provide working section navigation', async ({
+  page,
+}) => {
+  const projects = [
+    'assemblemonitor',
+    'renewgrid',
+    'callmissed',
+  ];
+
+  for (const project of projects) {
+    await page.goto(`/work/${project}/`);
+
+    const contents = page.getByRole('navigation', {
+      name: 'Case study contents',
+    });
+
+    await expect(contents).toBeVisible();
+
+    const summary = contents.locator('summary');
+
+    await summary.click();
+
+    const links = contents.getByRole('link');
+
+    const count = await links.count();
+
+    expect(
+      count,
+      `${project} should have major article sections`,
+    ).toBeGreaterThan(0);
+
+    const firstLink = links.first();
+
+    const href = await firstLink.getAttribute('href');
+
+    expect(href).toMatch(/^#[a-zA-Z0-9_-]+$/);
+
+    const target = page.locator(href!);
+
+    await expect(target).toHaveCount(1);
+
+    await firstLink.click();
+
+    await expect
+      .poll(() => new URL(page.url()).hash)
+      .toBe(href);
+
+    await expect(target).toBeInViewport();
+  }
+});
+
+test('case studies fit narrow mobile screens', async ({ page }) => {
+  const routes = [
+    '/work/assemblemonitor/',
+    '/work/renewgrid/',
+    '/work/callmissed/',
+  ];
+
+  const widths = [320, 360, 390];
+
+  for (const width of widths) {
+    await page.setViewportSize({
+      width,
+      height: 800,
+    });
+
+    for (const route of routes) {
+      await page.goto(route);
+
+      const heading = page.getByRole('heading', {
+        level: 1,
+      });
+
+      await expect(heading).toBeVisible();
+
+      const overflow = await page.evaluate(() => {
+        return (
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth
+        );
+      });
+
+      expect(
+        overflow,
+        `${route} overflows at ${width}px`,
+      ).toBeLessThanOrEqual(1);
+
+      const metadata = page.locator('.case-meta > div');
+
+      await expect(metadata).toHaveCount(3);
+
+      const role = await metadata.nth(0).boundingBox();
+      const period = await metadata.nth(1).boundingBox();
+      const source = await metadata.nth(2).boundingBox();
+
+      expect(role).not.toBeNull();
+      expect(period).not.toBeNull();
+      expect(source).not.toBeNull();
+
+      // Period and source share the second metadata row.
+      expect(
+        Math.abs(period!.y - source!.y),
+      ).toBeLessThanOrEqual(3);
+
+      expect(role!.y).toBeLessThan(period!.y);
+    }
+  }
+});

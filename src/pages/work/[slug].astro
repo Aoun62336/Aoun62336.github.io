@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import CaseContents from "../../components/CaseContents.astro";
 import EngineeringEvidence from "../../components/EngineeringEvidence.astro";
 
 export async function getStaticPaths() {
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 ---
 
 <BaseLayout
@@ -33,7 +34,7 @@ const { Content } = await render(entry);
     <div class="case-heading">
       <a class="back-link" href="/work/"> ← ALL PROJECTS </a>
 
-      <p class="eyebrow" style="margin-top: 42px;">
+      <p class="eyebrow case-category">
         {entry.data.category}
       </p>
 
@@ -75,10 +76,19 @@ const { Content } = await render(entry);
       </div>
     </div>
 
+    <CaseContents headings={headings} />
+
     <EngineeringEvidence projectId={entry.id} />
 
     <article class="case-article">
       <Content />
+
+      <div class="case-article__end">
+        <a href="#main" class="case-back-to-top">
+          <span aria-hidden="true">↑</span>
+          Back to top
+        </a>
+      </div>
     </article>
   </section>
 </BaseLayout>

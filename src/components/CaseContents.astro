@@ -1,0 +1,239 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Show major article sections only.
+const sections = headings.filter((heading) => heading.depth === 2);
+---
+
+{
+  sections.length > 0 && (
+    <nav class="case-contents" aria-label="Case study contents">
+      <details>
+        <summary>
+          <span class="case-contents__summary-left">
+            <span class="case-contents__symbol" aria-hidden="true">
+              ≡
+            </span>
+
+            <span>
+              <strong>On this page</strong>
+              <small>Jump to a section</small>
+            </span>
+          </span>
+
+          <span class="case-contents__summary-right">
+            <span class="case-contents__count">
+              {sections.length} SECTIONS
+            </span>
+
+            <span class="case-contents__chevron" aria-hidden="true">
+              +
+            </span>
+          </span>
+        </summary>
+
+        <ol class="case-contents__list">
+          {
+            sections.map((section, index) => (
+              <li>
+                <a href={`#${section.slug}`}>
+                  <span class="case-contents__index">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <span>{section.text}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </details>
+    </nav>
+  )
+}
+
+<style>
+  .case-contents {
+    margin: 30px 0 0;
+    overflow: hidden;
+    border: 1px solid rgba(216, 155, 176, 0.28);
+    border-radius: 13px;
+    background: #242027;
+  }
+
+  .case-contents summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 72px;
+    padding: 17px 22px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .case-contents summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .case-contents summary:focus-visible {
+    outline: 3px solid #e6bf94;
+    outline-offset: -4px;
+  }
+
+  .case-contents__summary-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .case-contents__symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    border: 1px solid rgba(216, 155, 176, 0.35);
+    border-radius: 9px;
+    color: #d89bb0;
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .case-contents__summary-left strong {
+    display: block;
+    color: #f5f0e9;
+    font-size: 0.94rem;
+    font-weight: 600;
+  }
+
+  .case-contents__summary-left small {
+    display: block;
+    margin-top: 4px;
+    color: #c7c0c7;
+    font-size: 0.77rem;
+  }
+
+  .case-contents__summary-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+
+  .case-contents__count {
+    color: #aab99d;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .case-contents__chevron {
+    color: #d89bb0;
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  details[open] .case-contents__chevron {
+    transform: rotate(45deg);
+  }
+
+  .case-contents__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 14px;
+    border-top: 1px solid rgba(245, 240, 233, 0.1);
+    list-style: none;
+  }
+
+  .case-contents__list li {
+    min-width: 0;
+  }
+
+  .case-contents__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    min-height: 46px;
+    padding: 12px;
+    border-radius: 7px;
+    color: #f5f0e9;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+
+  .case-contents__list a:hover,
+  .case-contents__list a:focus-visible {
+    background: rgba(216, 155, 176, 0.11);
+    color: #eac1d0;
+  }
+
+  .case-contents__list a:focus-visible {
+    outline: 2px solid #e6bf94;
+    outline-offset: -2px;
+  }
+
+  .case-contents__index {
+    flex-shrink: 0;
+    color: #aab99d;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 600px) {
+    .case-contents {
+      margin-top: 20px;
+    }
+
+    .case-contents summary {
+      min-height: 64px;
+      padding: 14px 16px;
+    }
+
+    .case-contents__summary-right {
+      gap: 12px;
+    }
+
+    .case-contents__count {
+      font-size: 0.6rem;
+    }
+
+    .case-contents__list {
+      grid-template-columns: 1fr;
+      padding: 8px;
+    }
+
+    .case-contents__list a {
+      min-height: 48px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .case-contents__chevron {
+      transition: transform 180ms ease;
+    }
+
+    .case-contents__list a {
+      transition:
+        color 180ms ease,
+        background-color 180ms ease;
+    }
+  }
+</style>
+

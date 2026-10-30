@@ -1432,3 +1432,245 @@ p {
   }
 
 }
+
+
+/* =========================================================
+   PHASE 4: CASE STUDY READING AND MOBILE REFINEMENT
+   ========================================================= */
+
+/* General article improvements */
+
+.case-category {
+  margin-top: 42px;
+  overflow-wrap: anywhere;
+}
+
+.case-heading h1 {
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+
+.case-heading > p:not(.eyebrow) {
+  max-width: 680px;
+  text-wrap: pretty;
+}
+
+.case-meta > div {
+  min-width: 0;
+}
+
+.case-meta strong,
+.case-meta a {
+  overflow-wrap: anywhere;
+}
+
+.case-article h2,
+.case-article h3 {
+  scroll-margin-top: 110px;
+}
+
+.case-article h2:target,
+.case-article h3:target {
+  color: var(--plum);
+}
+
+.case-article pre,
+.case-article table {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.case-article img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+/* Tablet and small desktop */
+
+@media (min-width: 601px) and (max-width: 900px) {
+
+  .case-heading {
+    padding-top: 72px;
+    padding-bottom: 42px;
+  }
+
+  .case-heading h1 {
+    font-size: clamp(3rem, 6.5vw, 4.6rem);
+    line-height: 1.06;
+  }
+
+  .case-meta {
+    gap: 20px;
+  }
+
+  .case-article {
+    margin-top: 52px;
+  }
+
+}
+
+
+/* Mobile case studies */
+
+@media (max-width: 600px) {
+
+  .case-heading {
+    max-width: 100%;
+    padding-top: 36px;
+    padding-bottom: 24px;
+  }
+
+  .case-heading .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.76rem;
+  }
+
+  .case-category {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 0.72rem;
+    line-height: 1.7;
+    letter-spacing: 0.075em;
+  }
+
+  .case-heading h1 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: clamp(2.25rem, 9.5vw, 3.1rem);
+    line-height: 1.07;
+    letter-spacing: -0.058em;
+  }
+
+  .case-heading > p:not(.eyebrow) {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.72;
+  }
+
+  /* Role spans both columns. Period and source share a row. */
+
+  .case-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 16px;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  .case-meta > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .case-meta .eyebrow {
+    margin-bottom: 6px;
+    font-size: 0.67rem;
+  }
+
+  .case-meta strong {
+    margin-top: 5px;
+    font-size: 0.89rem;
+    line-height: 1.55;
+  }
+
+  .case-article {
+    width: 100%;
+    margin: 46px auto 76px;
+    font-size: 0.99rem;
+    line-height: 1.78;
+  }
+
+  .case-article h2 {
+    margin-top: 46px;
+    margin-bottom: 17px;
+    font-size: clamp(1.65rem, 6.8vw, 2.25rem);
+    line-height: 1.23;
+  }
+
+  .case-article h3 {
+    margin-top: 30px;
+    margin-bottom: 14px;
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .case-article p,
+  .case-article li {
+    overflow-wrap: break-word;
+  }
+
+  .case-article pre {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .case-article blockquote {
+    margin: 24px 0;
+    padding: 15px 18px;
+  }
+
+  .case-article th,
+  .case-article td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+}
+
+
+/* Very small phones */
+
+@media (max-width: 350px) {
+
+  .case-heading h1 {
+    font-size: 2.18rem;
+  }
+
+  .case-meta {
+    column-gap: 12px;
+  }
+
+  .case-meta strong {
+    font-size: 0.84rem;
+  }
+
+}
+
+
+/* End-of-case-study navigation */
+
+.case-article__end {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 70px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.case-back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 0;
+  color: var(--plum);
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.case-back-to-top:hover {
+  color: var(--text);
+}
+
+.case-back-to-top span {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+  .case-article__end {
+    margin-top: 46px;
+  }
+}
