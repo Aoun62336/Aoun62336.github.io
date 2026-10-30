@@ -67,6 +67,16 @@ The repository includes recorded execution evidence for:
 
 This helped me understand how Terraform compares configuration with state, constructs an execution plan, and applies resource changes.
 
+## Deployment architecture boundaries
+
+| Implementation | Environment | Purpose |
+|---|---|---|
+| GitHub Actions and GHCR | GitHub-hosted runners | Validate, publish images, and verify an ephemeral Compose stack |
+| Jenkins and Docker Hub | Ubuntu EC2 instance | Build, scan, publish, and verify a Compose deployment on EC2 |
+| Terraform Docker provider | Local Docker environment | Manage the Compose application stack as infrastructure code |
+
+These are separate engineering implementations sharing the RenewGrid application. They are not three consecutive stages of one pipeline.
+
 ## Git workflow and release practices
 
 I also worked with feature branches, pull requests, checks, and versioned releases to make repository changes easier to review and track.

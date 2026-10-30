@@ -48,12 +48,21 @@ const isActive = (href: string) => pathname.startsWith(href);
     </a>
 
     <details class="mobile-nav">
-      <summary aria-label="Open navigation menu">
+      <summary>
         Menu <span aria-hidden="true">+</span>
       </summary>
 
       <nav aria-label="Mobile navigation">
-        {links.map((link) => <a href={link.href}>{link.label}</a>)}
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          ))
+        }
 
         <a href="mailto:aounmd74@gmail.com">Contact</a>
       </nav>

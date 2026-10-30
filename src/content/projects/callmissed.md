@@ -17,6 +17,7 @@ flow:
   - "AWS OIDC"
   - "Amazon ECR"
   - "Lambda"
+source: "https://github.com/Aoun62336/CallMissed-Ai-Workspace"
 ---
 
 ## Context
@@ -34,6 +35,10 @@ The frontend provides the user interface.
 The FastAPI backend handles application requests and integration with the external AI service.
 
 For browser voice sessions, the backend creates the necessary session information before the browser connects through the supported provider flow.
+
+The React build and FastAPI service run in the same AWS Lambda container through the Lambda Web Adapter. The Lambda Function URL uses AWS authorization type `NONE`, with reviewer access controls implemented by the application for protected functionality.
+
+Voice media does not pass through Lambda after session creation. The browser connects directly to the provider's WebRTC service using temporary connection information returned through FastAPI.
 
 Some application capabilities depend on an external service and its access requirements. A public code repository does not mean all third-party functionality is available as a free, unrestricted live demo.
 

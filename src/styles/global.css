@@ -465,12 +465,15 @@ p {
   background: var(--surface);
   transition:
     border-color 220ms ease,
-    transform 220ms ease;
+    transform 280ms cubic-bezier(.2,.75,.25,1),
+    box-shadow 280ms ease;
 }
 
-.project-card:hover {
+.project-card:hover,
+.project-card:focus-within {
   transform: translateY(-4px);
   border-color: rgba(216, 155, 176, 0.45);
+  box-shadow: 0 22px 58px rgba(0, 0, 0, .18);
 }
 
 .project-visual {
@@ -496,6 +499,12 @@ p {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(216,155,176,.13), transparent 67%);
   content: "";
+  transition: transform 550ms cubic-bezier(.2,.75,.25,1);
+}
+
+.project-card:hover .project-visual::before,
+.project-card:focus-within .project-visual::before {
+  transform: scale(1.12);
 }
 
 .project-visual--renewgrid::before {
@@ -562,6 +571,13 @@ p {
 .project-link span {
   margin-left: 12px;
   color: var(--plum);
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+
+.project-link:hover span,
+.project-link:focus-visible span {
+  transform: translate(3px, -3px);
 }
 
 /* Expertise */
@@ -1115,4 +1131,304 @@ p {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ============================================================
+   PHASE 3: INTERACTION AND MOTION REFINEMENT
+   Purposeful motion, accessible feedback, no external library
+   ============================================================ */
+
+
+/* 1. Case-study reading progress */
+
+.reading-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 90;
+  height: 3px;
+  pointer-events: none;
+}
+
+.reading-progress__bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--sage),
+    var(--plum),
+    var(--gold)
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+
+/* 2. Desktop navigation underline */
+
+.desktop-nav a {
+  position: relative;
+  padding-block: 8px;
+}
+
+.desktop-nav a[aria-current="page"] {
+  text-decoration: none;
+}
+
+.desktop-nav a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--plum);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.desktop-nav a:hover::after,
+.desktop-nav a:focus-visible::after,
+.desktop-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+
+/* 3. Button and contact arrow foundations */
+
+.button > span[aria-hidden="true"],
+.header-contact > span[aria-hidden="true"] {
+  display: inline-block;
+}
+
+.button:hover > span[aria-hidden="true"],
+.button:focus-visible > span[aria-hidden="true"],
+.header-contact:hover > span[aria-hidden="true"],
+.header-contact:focus-visible > span[aria-hidden="true"] {
+  transform: translate(3px, -3px);
+}
+
+
+/* 4. Mobile navigation state */
+
+.mobile-nav summary span {
+  display: inline-block;
+}
+
+.mobile-nav[open] summary span {
+  transform: rotate(45deg);
+}
+
+.mobile-nav nav a[aria-current="page"] {
+  color: var(--plum);
+  background: var(--surface-raised);
+}
+
+
+/* 5. Restore project-card hover after scroll reveal */
+
+.reveal-ready .project-card.is-visible:hover,
+.reveal-ready .project-card.is-visible:focus-within {
+  transform: translateY(-4px);
+}
+
+
+/* 6. Expertise and engineering-evidence foundations */
+
+.expertise-card,
+.engineering-evidence__item {
+  backface-visibility: hidden;
+}
+
+.engineering-evidence__image-link img {
+  transform: scale(1);
+}
+
+.engineering-evidence__item:focus-within {
+  border-color: rgba(216, 155, 176, 0.65);
+}
+
+
+/* 7. Hover effects only for devices with real hover support */
+
+@media (hover: hover) and (pointer: fine) {
+
+  .expertise-card:hover {
+    border-color: rgba(216, 155, 176, 0.42);
+    background: var(--surface);
+    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.15);
+  }
+
+  .expertise-card:hover .expertise-index {
+    color: var(--plum);
+  }
+
+  .engineering-evidence__item:hover {
+    border-color: rgba(216, 155, 176, 0.42);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.15);
+  }
+
+  .engineering-evidence__image-link:hover img {
+    transform: scale(1.012);
+  }
+
+}
+
+
+/* 8. Motion enabled only when the visitor permits it */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  @keyframes hero-arrive {
+    from {
+      opacity: 0.68;
+      transform: translate3d(0, 14px, 0);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Sequenced hero entrance */
+
+  .hero-intro,
+  .hero h1,
+  .hero-description,
+  .hero-actions,
+  .hero-footnote,
+  .portrait-shell {
+    animation: hero-arrive 720ms
+      cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  .hero-intro {
+    animation-delay: 40ms;
+  }
+
+  .hero h1 {
+    animation-delay: 110ms;
+  }
+
+  .hero-description {
+    animation-delay: 180ms;
+  }
+
+  .hero-actions {
+    animation-delay: 250ms;
+  }
+
+  .hero-footnote {
+    animation-delay: 310ms;
+  }
+
+  .portrait-shell {
+    animation-delay: 200ms;
+  }
+
+
+  /* Navigation and arrow transitions */
+
+  .desktop-nav a::after {
+    transition: transform 240ms
+      cubic-bezier(0.2, 0.75, 0.25, 1);
+  }
+
+  .button > span[aria-hidden="true"],
+  .header-contact > span[aria-hidden="true"] {
+    transition: transform 190ms ease;
+  }
+
+  .mobile-nav summary span {
+    transition: transform 200ms ease;
+  }
+
+
+  /* Cards without reveal state */
+
+  .expertise-card,
+  .engineering-evidence__item {
+    transition:
+      border-color 250ms ease,
+      background-color 250ms ease,
+      box-shadow 250ms ease;
+  }
+
+
+  /* Preserve hover transitions after reveal activates */
+
+  .reveal-ready .project-card[data-reveal].is-visible {
+    transition:
+      opacity 650ms ease,
+      transform 360ms cubic-bezier(0.2, 0.75, 0.25, 1),
+      border-color 240ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .reveal-ready .expertise-card[data-reveal].is-visible {
+    transition:
+      opacity 650ms ease,
+      transform 650ms cubic-bezier(0.2, 0.75, 0.25, 1),
+      border-color 250ms ease,
+      background-color 250ms ease,
+      box-shadow 250ms ease;
+  }
+
+  .reveal-ready .engineering-evidence__item[data-reveal].is-visible {
+    transition:
+      opacity 650ms ease,
+      transform 650ms cubic-bezier(0.2, 0.75, 0.25, 1),
+      border-color 250ms ease,
+      box-shadow 250ms ease;
+  }
+
+
+  /* Engineering-image hover */
+
+  .engineering-evidence__image-link img {
+    transition: transform 600ms
+      cubic-bezier(0.2, 0.75, 0.25, 1);
+  }
+
+}
+
+
+/* 9. Reduce nonessential movement */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .reading-progress {
+    display: none;
+  }
+
+  .button:hover,
+  .project-card:hover,
+  .project-card:focus-within,
+  .reveal-ready .project-card.is-visible:hover,
+  .reveal-ready .project-card.is-visible:focus-within {
+    transform: none;
+  }
+
+  .button:hover > span[aria-hidden="true"],
+  .button:focus-visible > span[aria-hidden="true"],
+  .header-contact:hover > span[aria-hidden="true"],
+  .header-contact:focus-visible > span[aria-hidden="true"],
+  .engineering-evidence__image-link:hover img {
+    transform: none;
+  }
+
+}
+
+
+/* 10. Keep the reading indicator out of print layouts */
+
+@media print {
+
+  .reading-progress {
+    display: none;
+  }
+
 }

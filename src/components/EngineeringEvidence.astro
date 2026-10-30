@@ -8,6 +8,10 @@ import assembleObservability from "../assets/project-media/assemblemonitor-obser
 
 import renewGridApp from "../assets/project-media/renewgrid-app.png";
 import callMissedVoice from "../assets/project-media/callmissed-voice.png";
+import renewGridRuntime from "../assets/project-media/renewgrid-runtime.png";
+import renewGridDelivery from "../assets/project-media/renewgrid-delivery.png";
+import callMissedRuntime from "../assets/project-media/callmissed-runtime.png";
+import callMissedDeployment from "../assets/project-media/callmissed-deployment.png";
 
 interface Props {
   projectId: string;
@@ -49,6 +53,20 @@ const galleries: Record<string, EvidenceItem[]> = {
 
   renewgrid: [
     {
+      image: renewGridRuntime,
+      title: "Container runtime architecture",
+      description:
+        "The React web container, FastAPI API, PostgreSQL, Alembic migration dependency, internal networks and persistent volumes in the Compose stack.",
+      alt: "RenewGrid architecture diagram showing browser traffic to React, FastAPI and PostgreSQL with database migration and volume dependencies.",
+    },
+    {
+      image: renewGridDelivery,
+      title: "Three independent delivery models",
+      description:
+        "GitHub Actions with GHCR and ephemeral verification, Jenkins with Docker Hub and EC2, and Terraform managing local Docker Compose.",
+      alt: "RenewGrid delivery diagram separating GitHub Actions, Jenkins EC2 deployment, and Terraform-managed local Docker Compose.",
+    },
+    {
       image: renewGridApp,
       title: "RenewGrid application",
       description:
@@ -58,6 +76,20 @@ const galleries: Record<string, EvidenceItem[]> = {
   ],
 
   callmissed: [
+    {
+      image: callMissedRuntime,
+      title: "Serverless application runtime",
+      description:
+        "React and FastAPI share a Lambda container. FastAPI integrates with CallMissed, while voice media connects directly from the browser to provider WebRTC.",
+      alt: "CallMissed runtime diagram with Lambda Function URL, FastAPI, React, Secrets Manager, CloudWatch and direct browser WebRTC.",
+    },
+    {
+      image: callMissedDeployment,
+      title: "Digest-pinned deployment and recovery",
+      description:
+        "Successful CI triggers an OIDC-authenticated deployment through ECR to Lambda, followed by health checks and conditional restoration of the previous image.",
+      alt: "CallMissed deployment diagram showing GitHub Actions, AWS OIDC, Amazon ECR, AWS Lambda, health verification and failure rollback.",
+    },
     {
       image: callMissedVoice,
       title: "Browser voice workspace",
@@ -75,24 +107,24 @@ const headingId = `engineering-evidence-${projectId}`;
 {
   items.length > 0 && (
     <section class="engineering-evidence" aria-labelledby={headingId}>
-      <div class="engineering-evidence__heading">
+      <div class="engineering-evidence__heading" data-reveal>
         <p class="engineering-evidence__eyebrow">VISUAL EVIDENCE</p>
         <h2 id={headingId}>Inside the engineering work</h2>
         <p>
-          Selected diagrams and screenshots from the project repositories. Open
-          an image to inspect its original details.
+          Source-backed architecture diagrams and original application screenshots.
+          Open any image to inspect its details.
         </p>
       </div>
 
       <div class="engineering-evidence__list">
         {items.map((item, index) => (
-          <figure class="engineering-evidence__item">
+          <figure class="engineering-evidence__item" data-reveal>
             <div class="engineering-evidence__topline">
               <span>
                 {String(index + 1).padStart(2, "0")} /{" "}
                 {String(items.length).padStart(2, "0")}
               </span>
-              <span>PROJECT RECORD</span>
+              <span>ENGINEERING VISUAL</span>
             </div>
 
             <a

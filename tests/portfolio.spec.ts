@@ -139,7 +139,7 @@ test('keyboard users can reach the skip link', async ({ page }) => {
   ).toBeFocused();
 });
 
-for (const route of ['/', '/work/', '/about/', '/work/assemblemonitor/']) {
+for (const route of routes) {
   test(`automated accessibility checks pass on ${route}`, async ({ page }) => {
     await page.goto(route);
 
@@ -162,3 +162,120 @@ for (const route of ['/', '/work/', '/about/', '/work/assemblemonitor/']) {
     expect(results.violations).toEqual([]);
   });
 }
+
+const evidenceCases = [
+  { slug: 'assemblemonitor', imageCount: 3 },
+  { slug: 'renewgrid', imageCount: 3 },
+  { slug: 'callmissed', imageCount: 3 },
+];
+
+for (const { slug, imageCount } of evidenceCases) {
+  test(`${slug} evidence images and original links work`, async ({
+    page,
+    request,
+  }) => {
+    await page.goto(`/work/${slug}/`);
+
+    const links = page.locator('.engineering-evidence__image-link');
+    await expect(links).toHaveCount(imageCount);
+
+    for (const link of await links.all()) {
+      await link.scrollIntoViewIfNeeded();
+      const img = link.locator('img');
+
+      await expect.poll(async () => {
+        return img.evaluate((element) => {
+          return (element as HTMLImageElement).naturalWidth;
+        });
+      }).toBeGreaterThan(0);
+
+      const href = await link.getAttribute('href');
+      expect(href).toBeTruthy();
+
+      const response = await request.get(href!);
+      expect(response.status()).toBe(200);
+    }
+  });
+}
+
+test('case-study reading progress updates on scroll', async ({
+  page,
+}) => {
+  await page.goto('/work/renewgrid/');
+
+  const progressBar = page.locator('.reading-progress__bar');
+
+  await expect(progressBar).toHaveCount(1);
+
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+
+    window.scrollTo(
+      0,
+      document.documentElement.scrollHeight,
+    );
+  });
+
+  await expect
+    .poll(async () => {
+      return progressBar.evaluate((element) => {
+        const transform = getComputedStyle(element).transform;
+
+        return new DOMMatrixReadOnly(transform).m11;
+      });
+    })
+    .toBeGreaterThan(0.95);
+});
+
+test('mobile navigation exposes its open and closed states', async ({
+  page,
+}) => {
+  await page.setViewportSize({
+    width: 390,
+    height: 844,
+  });
+
+  await page.goto('/');
+
+  const menu = page.locator('.mobile-nav');
+  const toggle = menu.locator('summary');
+
+  await expect(menu).not.toHaveAttribute('open', '');
+
+  await toggle.click();
+
+  await expect(menu).toHaveAttribute('open', '');
+
+  await toggle.click();
+
+  await expect(menu).not.toHaveAttribute('open', '');
+});
+
+test('project card hover works after scroll reveal', async ({
+  page,
+}) => {
+  await page.setViewportSize({
+    width: 1280,
+    height: 900,
+  });
+
+  await page.goto('/');
+
+  const card = page.locator('.project-card').first();
+
+  await card.scrollIntoViewIfNeeded();
+
+  await expect(card).toHaveClass(/is-visible/);
+
+  await card.hover();
+
+  await expect
+    .poll(async () => {
+      return card.evaluate((element) => {
+        const transform = getComputedStyle(element).transform;
+
+        return new DOMMatrixReadOnly(transform).m42;
+      });
+    })
+    .toBeLessThan(-3);
+});

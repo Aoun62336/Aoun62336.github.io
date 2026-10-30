@@ -44,6 +44,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:description" content={description} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" sizes="any" />
   </head>
 
   <body>
@@ -90,6 +91,47 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             observer.observe(element);
           }
         });
+      }
+
+      // Case-study reading progress.
+      // Only runs on pages that contain the progress indicator.
+
+      const progressBar = document.querySelector<HTMLElement>(
+        ".reading-progress__bar",
+      );
+
+      if (progressBar) {
+        let frameRequested = false;
+
+        const updateReadingProgress = () => {
+          const documentHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+
+          const progress =
+            documentHeight > 0
+              ? Math.min(1, Math.max(0, window.scrollY / documentHeight))
+              : 1;
+
+          progressBar.style.transform = `scaleX(${progress})`;
+
+          frameRequested = false;
+        };
+
+        const scheduleProgressUpdate = () => {
+          if (frameRequested) return;
+
+          frameRequested = true;
+
+          window.requestAnimationFrame(updateReadingProgress);
+        };
+
+        window.addEventListener("scroll", scheduleProgressUpdate, {
+          passive: true,
+        });
+
+        window.addEventListener("resize", scheduleProgressUpdate);
+
+        scheduleProgressUpdate();
       }
     </script>
   </body>
