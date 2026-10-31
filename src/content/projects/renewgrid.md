@@ -1,8 +1,8 @@
 ---
 title: "RenewGrid"
 category: "CI/CD / CONTAINERS / INFRASTRUCTURE AS CODE"
-description: "A React, FastAPI, and PostgreSQL application used to develop and verify container delivery workflows with GitHub Actions, Jenkins, Docker Compose, and Terraform."
-role: "Application and DevOps implementation"
+description: "An e-waste management application used to implement and verify CI/CD, container delivery, and local Terraform automation."
+role: "DevOps internship: CI/CD, container delivery, and local infrastructure automation"
 period: "2026"
 order: 2
 technologies:
@@ -22,11 +22,9 @@ source: "https://github.com/Aoun62336/RenewGrid-Terraform-IaC"
 
 ## Context
 
-RenewGrid is a full-stack application built with React and TypeScript, FastAPI, and PostgreSQL.
+RenewGrid is an e-waste recycling platform built with React, FastAPI, and PostgreSQL.
 
-I used the application as a consistent baseline while working on several DevOps engineering areas: automated validation, container image publication, deployment verification, and infrastructure provisioning.
-
-Using the same application across multiple workflows made it easier to compare tools and troubleshoot actual pipeline problems.
+During my DevOps internship at Elevate Labs, I used this single codebase as a consistent testbed across three different delivery paths: GitHub Actions, an EC2-hosted Jenkins pipeline, and local Terraform Docker automation. Using the same application across all three environments made it easy to compare build speeds, security scans, and deployment behavior side by side.
 
 ## GitHub Actions and GHCR
 
@@ -59,6 +57,10 @@ I created a separate Terraform repository to describe and manage the RenewGrid d
 
 **Scope matters here:** the Terraform configuration in this project uses the Docker provider to manage the Docker Compose-based deployment. It is not a Terraform implementation of an entire AWS VPC, EKS cluster, or managed database.
 
+The managed Compose project includes PostgreSQL, an Alembic migration service, FastAPI, and the Nginx-served frontend. The migration service is a one-time initialization dependency that exits after successful completion. It is not expected to remain running like the application services.
+
+Terraform manages the Compose project as a resource. Docker Compose handles the service-level startup dependencies inside that project.
+
 The repository includes recorded execution evidence for:
 
 1. Terraform planning.
@@ -67,11 +69,43 @@ The repository includes recorded execution evidence for:
 
 This helped me understand how Terraform compares configuration with state, constructs an execution plan, and applies resource changes.
 
+## Deployment architecture boundaries
+
+| Implementation | Environment | Purpose |
+|---|---|---|
+| GitHub Actions and GHCR | GitHub-hosted runners | Validate, publish images, and verify an ephemeral Compose stack |
+| Jenkins and Docker Hub | Ubuntu EC2 instance | Build, scan, publish, and verify a Compose deployment on EC2 |
+| Terraform Docker provider | Local Docker environment | Manage the Compose application stack as infrastructure code |
+
+These are separate engineering implementations sharing the RenewGrid application. They are not three consecutive stages of one pipeline.
+
 ## Git workflow and release practices
 
 I also worked with feature branches, pull requests, checks, and versioned releases to make repository changes easier to review and track.
 
 These practices supported the CI/CD workflows rather than existing as a separate artificial exercise.
+
+## Engineering challenge: getting the Jenkins pipeline to pass
+
+The first Jenkins implementation did not immediately produce a successful release.
+
+Frontend validation identified issues involving undefined or unused variables. The build environment also encountered npm cache permission problems, and earlier image scans identified dependency findings that required investigation.
+
+I reviewed the failed stages, corrected the frontend issues, adjusted writable build locations, and reviewed affected dependencies before repeating the pipeline checks.
+
+The recorded result was Jenkins Build #7 on October 24, 2026. That execution completed its configured stages successfully, including:
+
+- 26 passing backend tests.
+- Frontend build and lint validation.
+- Container image builds.
+- Configured Trivy vulnerability gates.
+- CycloneDX SBOM generation.
+- Versioned Docker Hub publication.
+- Docker Compose deployment verification on EC2.
+
+The security result describes that recorded execution. It does not mean the images will remain free of future vulnerabilities.
+
+[Read the Jenkins verification record](https://github.com/Aoun62336/RenewGrid-Terraform-IaC/blob/main/evidence/jenkins/jenkins-verification.md)
 
 ## Engineering decisions
 

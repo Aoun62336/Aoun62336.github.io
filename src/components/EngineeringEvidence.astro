@@ -2,15 +2,27 @@
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
-import assembleAws from "../assets/project-media/assemblemonitor-aws.jpeg";
-import assembleGitops from "../assets/project-media/assemblemonitor-gitops.jpeg";
-import assembleObservability from "../assets/project-media/assemblemonitor-observability.jpeg";
+import assembleAws from "../assets/project-media/assemblemonitor-aws.png";
+import assembleGitops from "../assets/project-media/assemblemonitor-gitops.png";
+import assembleObservability from "../assets/project-media/assemblemonitor-observability.png";
+import assembleArgocd from "../assets/project-media/assemblemonitor-argocd.png";
+import assembleDashboard from "../assets/project-media/assemblemonitor-dashboard.png";
 
 import renewGridApp from "../assets/project-media/renewgrid-app.png";
+import renewGridRuntime from "../assets/project-media/renewgrid-runtime.png";
+import renewGridDelivery from "../assets/project-media/renewgrid-delivery.png";
+import renewJenkins from "../assets/project-media/renewgrid-jenkins.png";
+import renewServices from "../assets/project-media/renewgrid-services.png";
+
 import callMissedVoice from "../assets/project-media/callmissed-voice.png";
+import callMissedRuntime from "../assets/project-media/callmissed-runtime.png";
+import callMissedDeployment from "../assets/project-media/callmissed-deployment.png";
+import callmissedCI from "../assets/project-media/callmissed-ci.png";
+import callmissedChat from "../assets/project-media/callmissed-chat.png";
 
 interface Props {
   projectId: string;
+  mode?: "primary" | "supporting" | "all";
 }
 
 interface EvidenceItem {
@@ -20,34 +32,67 @@ interface EvidenceItem {
   alt: string;
 }
 
-const { projectId } = Astro.props;
+const { projectId, mode = "all" } = Astro.props;
 
 const galleries: Record<string, EvidenceItem[]> = {
   assemblemonitor: [
     {
       image: assembleAws,
-      title: "AWS infrastructure",
+      title: "AWS deployment architecture",
       description:
-        "Network layout, application routing, EKS workloads, database access and supporting AWS services. The diagram includes some historical supporting infrastructure.",
-      alt: "AssembleMonitor AWS architecture with VPC boundaries, public and private subnets, load balancer, EKS, RDS and supporting services.",
+        "The default VPC, public ALB, private EKS workloads, RDS PostgreSQL, NAT routing, security services, and inactive legacy application ASG. AWS-managed services are shown outside the EKS node group.",
+      alt:
+        "AssembleMonitor AWS deployment. A WAF-associated public Application Load Balancer forwards requests to private EKS worker nodes through a frontend NodePort. Nginx reaches FastAPI, which accesses private RDS PostgreSQL. Supporting AWS services and the inactive legacy ASG are shown separately.",
     },
     {
       image: assembleGitops,
-      title: "CI/CD and GitOps",
+      title: "CI/CD and GitOps delivery",
       description:
-        "Jenkins validation and image publishing, followed by the primary GitOps path through GitHub and Argo CD. A separate K3s deployment path is also shown.",
-      alt: "AssembleMonitor CI/CD diagram showing Jenkins, code and image checks, Docker Hub, a GitOps repository, Argo CD, EKS and a separate K3s path.",
+        "Five independent GitHub Actions validation checks, a 17-stage Jenkins GitOps release, Docker Hub publication, manual approval, Helm configuration updates, and Argo CD reconciliation. The alternate K3s SSH deployment is shown separately.",
+      alt:
+        "AssembleMonitor GitOps delivery diagram. GitHub source enters Jenkins, which validates and publishes Docker images before approval. Jenkins commits approved Helm image tags to Git, Argo CD synchronizes them to EKS, and a separate Jenkins pipeline deploys to K3s over SSH.",
     },
     {
       image: assembleObservability,
-      title: "Metrics, logs and traces",
+      title: "Metrics, logs and distributed traces",
       description:
-        "Telemetry collection using OpenTelemetry, with Prometheus-compatible metrics, Loki logs, Tempo traces and Grafana visualization.",
-      alt: "AssembleMonitor observability diagram showing telemetry sources, an OpenTelemetry collector, Loki, Tempo, Amazon Managed Prometheus and Grafana.",
+        "The OpenTelemetry DaemonSet exports pod logs to Loki, application traces to Tempo, and Kubernetes metrics to AMP. A separate collector scrapes external EC2 Node Exporters. Loki and Tempo use S3 object storage.",
+      alt:
+        "AssembleMonitor observability diagram showing separate OpenTelemetry receivers for traces, pod logs and Kubernetes metrics. These feed Tempo, Loki and Amazon Managed Prometheus respectively. An independent collector scrapes EC2 hosts, while Grafana uses the telemetry backends as data sources.",
+    },
+    {
+      image: assembleArgocd,
+      title: "Argo CD synchronization evidence",
+      description:
+        "Captured Argo CD application synchronization during the documented GitOps implementation.",
+      alt:
+        "Argo CD application synchronization evidence for AssembleMonitor.",
+    },
+    {
+      image: assembleDashboard,
+      title: "Application interface",
+      description:
+        "A client-facing view of the construction management application.",
+      alt:
+        "AssembleMonitor client dashboard.",
     },
   ],
 
   renewgrid: [
+    {
+      image: renewGridRuntime,
+      title: "Container runtime architecture",
+      description:
+        "The React web container, FastAPI API, PostgreSQL, Alembic migration dependency, internal networks and persistent volumes in the Compose stack.",
+      alt: "RenewGrid architecture diagram showing browser traffic to React, FastAPI and PostgreSQL with database migration and volume dependencies.",
+    },
+    {
+      image: renewGridDelivery,
+      title: "Three independent delivery models",
+      description:
+        "GitHub Actions with GHCR and ephemeral verification, Jenkins with Docker Hub and EC2, and Terraform managing local Docker Compose.",
+      alt: "RenewGrid delivery diagram separating GitHub Actions, Jenkins EC2 deployment, and Terraform-managed local Docker Compose.",
+    },
     {
       image: renewGridApp,
       title: "RenewGrid application",
@@ -55,9 +100,39 @@ const galleries: Record<string, EvidenceItem[]> = {
         "A screenshot from the full-stack application. The related engineering work covers automated validation, container publication, Compose deployment and Terraform provisioning.",
       alt: "RenewGrid application registration screen.",
     },
+    {
+      image: renewJenkins,
+      title: "Jenkins pipeline execution",
+      description:
+        "Recorded Jenkins stage execution for the container delivery workflow.",
+      alt:
+        "RenewGrid Jenkins pipeline execution screenshot.",
+    },
+    {
+      image: renewServices,
+      title: "Terraform-managed services",
+      description:
+        "Docker service state captured during the local Terraform-managed Compose implementation.",
+      alt:
+        "RenewGrid Docker Compose service evidence.",
+    },
   ],
 
   callmissed: [
+    {
+      image: callMissedRuntime,
+      title: "Serverless application runtime",
+      description:
+        "React and FastAPI share a Lambda container. FastAPI integrates with CallMissed, while voice media connects directly from the browser to provider WebRTC.",
+      alt: "CallMissed runtime diagram with Lambda Function URL, FastAPI, React, Secrets Manager, CloudWatch and direct browser WebRTC.",
+    },
+    {
+      image: callMissedDeployment,
+      title: "Digest-pinned deployment and recovery",
+      description:
+        "Successful CI triggers an OIDC-authenticated deployment through ECR to Lambda, followed by health checks and conditional restoration of the previous image.",
+      alt: "CallMissed deployment diagram showing GitHub Actions, AWS OIDC, Amazon ECR, AWS Lambda, health verification and failure rollback.",
+    },
     {
       image: callMissedVoice,
       title: "Browser voice workspace",
@@ -65,34 +140,78 @@ const galleries: Record<string, EvidenceItem[]> = {
         "The application interface during a browser voice session. The case study explains the application architecture and the separate serverless delivery workflow.",
       alt: "CallMissed AI Workspace voice interface showing an active browser conversation.",
     },
+    {
+      image: callmissedCI,
+      title: "Automated CI verification",
+      description:
+        "GitHub Actions validation evidence from the application repository.",
+      alt:
+        "CallMissed GitHub Actions CI verification.",
+    },
+    {
+      image: callmissedChat,
+      title: "Application chat workflow",
+      description:
+        "Application interface captured during the documented provider integration tests.",
+      alt:
+        "CallMissed AI Workspace chat interface.",
+    },
   ],
 };
 
-const items = galleries[projectId] ?? [];
-const headingId = `engineering-evidence-${projectId}`;
+const allItems = galleries[projectId] ?? [];
+
+const items =
+  mode === "primary"
+    ? allItems.slice(0, 1)
+    : mode === "supporting"
+      ? allItems.slice(1)
+      : allItems;
+
+const sectionId =
+  mode === "primary"
+    ? "architecture"
+    : mode === "supporting"
+      ? "verification-evidence"
+      : `engineering-evidence-${projectId}`;
+
+const headingId = `${sectionId}-heading`;
+
+const sectionTitle =
+  mode === "primary"
+    ? "Architecture at a glance"
+    : mode === "supporting"
+      ? "Supporting engineering evidence"
+      : "Inside the engineering work";
+
+const sectionDescription =
+  mode === "primary"
+    ? "Start with the main system architecture. Open the diagram to inspect the complete implementation view."
+    : mode === "supporting"
+      ? "Additional architecture diagrams, delivery records, and application screenshots from the documented work."
+      : "Source-backed architecture diagrams and original application screenshots.";
 ---
 
 {
   items.length > 0 && (
-    <section class="engineering-evidence" aria-labelledby={headingId}>
-      <div class="engineering-evidence__heading">
-        <p class="engineering-evidence__eyebrow">VISUAL EVIDENCE</p>
-        <h2 id={headingId}>Inside the engineering work</h2>
-        <p>
-          Selected diagrams and screenshots from the project repositories. Open
-          an image to inspect its original details.
+    <section id={sectionId} class="engineering-evidence" aria-labelledby={headingId}>
+      <div class="engineering-evidence__heading" data-reveal>
+        <p class="engineering-evidence__eyebrow">
+          {mode === "primary" ? "SYSTEM ARCHITECTURE" : "ENGINEERING EVIDENCE"}
         </p>
+        <h2 id={headingId}>{sectionTitle}</h2>
+        <p>{sectionDescription}</p>
       </div>
 
       <div class="engineering-evidence__list">
         {items.map((item, index) => (
-          <figure class="engineering-evidence__item">
+          <figure class="engineering-evidence__item" data-reveal>
             <div class="engineering-evidence__topline">
               <span>
                 {String(index + 1).padStart(2, "0")} /{" "}
                 {String(items.length).padStart(2, "0")}
               </span>
-              <span>PROJECT RECORD</span>
+              <span>ENGINEERING VISUAL</span>
             </div>
 
             <a
@@ -105,7 +224,8 @@ const headingId = `engineering-evidence-${projectId}`;
               <Image
                 src={item.image}
                 alt={item.alt}
-                width={1440}
+                widths={[480, 800, 1200, 1440]}
+                sizes="(max-width: 700px) calc(100vw - 48px), (max-width: 1200px) 88vw, 1050px"
                 format="webp"
                 quality={85}
                 loading="lazy"
@@ -244,5 +364,67 @@ const headingId = `engineering-evidence-${projectId}`;
     .engineering-evidence__image-link {
       padding: 0.5rem;
     }
+  }
+
+  /* Phase 4: compact technical gallery on mobile */
+
+  @media (max-width: 600px) {
+
+    .engineering-evidence {
+      margin-top: 48px;
+      margin-bottom: 56px;
+    }
+
+    .engineering-evidence__heading {
+      margin-bottom: 22px;
+    }
+
+    .engineering-evidence__heading h2 {
+      font-size: clamp(1.65rem, 7vw, 2.1rem);
+      line-height: 1.18;
+    }
+
+    .engineering-evidence__heading > p:last-child {
+      font-size: 0.93rem;
+      line-height: 1.7;
+    }
+
+    .engineering-evidence__list {
+      gap: 24px;
+    }
+
+    .engineering-evidence__item {
+      border-radius: 12px;
+    }
+
+    .engineering-evidence__topline {
+      padding: 12px 14px;
+      font-size: 0.63rem;
+    }
+
+    .engineering-evidence__image-link {
+      padding: 8px;
+    }
+
+    .engineering-evidence__caption {
+      padding: 18px;
+    }
+
+    .engineering-evidence__caption h3 {
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .engineering-evidence__caption p {
+      font-size: 0.89rem;
+      line-height: 1.72;
+    }
+
+    .engineering-evidence__caption a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
   }
 </style>

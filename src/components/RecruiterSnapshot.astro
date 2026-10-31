@@ -1,0 +1,121 @@
+<section class="recruiter-snapshot" aria-label="Professional overview">
+  <div class="container recruiter-snapshot__grid">
+    <div>
+      <span class="recruiter-snapshot__label">PROFESSIONAL FOCUS</span>
+      <strong>Cloud & DevOps Engineering</strong>
+      <p>AWS, Terraform, Kubernetes, Linux, and CI/CD.</p>
+    </div>
+
+    <div>
+      <span class="recruiter-snapshot__label">EXPERIENCE</span>
+      <strong>3 Hands-on Internships</strong>
+      <p>Elevate Labs (DevOps), Noorisys (Software), CanveX (Cloud Support).</p>
+    </div>
+
+    <div>
+      <span class="recruiter-snapshot__label">OPPORTUNITIES</span>
+      <strong>Junior & Associate Roles</strong>
+      <p>Available for full-time positions in India or remote.</p>
+    </div>
+
+    <div class="recruiter-snapshot__actions">
+      <a href="/about/#experience">
+        Experience <span aria-hidden="true">↗</span>
+      </a>
+
+      <a href="/resume/Aoun_MD_Resume.pdf">
+        Resume <span aria-hidden="true">↗</span>
+      </a>
+
+      <a href="https://github.com/Aoun62336" target="_blank" rel="noopener noreferrer">
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
+
+      <a href="https://www.linkedin.com/in/aoun26/" target="_blank" rel="noopener noreferrer">
+        LinkedIn <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .recruiter-snapshot {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: #211d24;
+  }
+
+  .recruiter-snapshot__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding-block: 25px;
+  }
+
+  .recruiter-snapshot__label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--sage);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
+  .recruiter-snapshot strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .recruiter-snapshot p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 0.77rem;
+    line-height: 1.6;
+  }
+
+  .recruiter-snapshot__actions {
+    display: grid;
+    gap: 9px;
+  }
+
+  .recruiter-snapshot__actions a {
+    display: inline-flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--plum);
+    color: var(--text);
+    font-size: 0.79rem;
+    white-space: nowrap;
+  }
+
+  .recruiter-snapshot__actions a span {
+    color: var(--plum);
+  }
+
+  @media (max-width: 1000px) {
+    .recruiter-snapshot__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .recruiter-snapshot__grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .recruiter-snapshot__actions {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .recruiter-snapshot__actions a {
+      white-space: normal;
+    }
+  }
+</style>
+

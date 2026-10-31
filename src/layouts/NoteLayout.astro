@@ -1,0 +1,45 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    category?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout
+  title={`${frontmatter.title} | Aoun Md.`}
+  description={frontmatter.description}
+>
+  <section class="container">
+    <header class="case-heading">
+      <a href="/notes/" class="back-link">
+        ← ALL ENGINEERING NOTES
+      </a>
+
+      <p class="eyebrow" style="margin-top: 32px;">
+        {frontmatter.category ?? "ENGINEERING NOTES"}
+      </p>
+
+      <h1>{frontmatter.title}</h1>
+
+      <p>{frontmatter.description}</p>
+    </header>
+
+    <article class="case-article">
+      <slot />
+
+      <div class="case-article__end">
+        <a href="/notes/" class="case-back-to-top">
+          ← More engineering notes
+        </a>
+      </div>
+    </article>
+  </section>
+</BaseLayout>
+

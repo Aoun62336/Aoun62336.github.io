@@ -66,13 +66,16 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         <h2>Automation and quality</h2>
 
         <p>
-          The release workflow will include build validation, content checks,
-          accessibility testing, and deployment through GitHub Actions.
+          GitHub Actions validates the Astro project, builds the static
+          website, and runs Playwright browser and automated accessibility
+          checks. A separate release job builds the GitHub Pages artifact,
+          which is published after the required workflow dependencies pass.
         </p>
 
         <p>
-          The goal is to keep the publication process repeatable while making
-          future changes easy to review.
+          The repository uses pull requests to review changes before
+          publication. The deployment workflow and supporting tests
+          are maintained alongside the website source.
         </p>
 
         <h2>Performance and accessibility</h2>
@@ -86,6 +89,26 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         <p>
           Visual effects should support the content. They should not delay
           access to project information or make the website harder to use.
+        </p>
+
+        <h2>Analytics and privacy</h2>
+
+        <p>
+          This website uses Cloudflare Web Analytics when the analytics
+          integration is enabled. It provides aggregate information about
+          visits and page performance.
+        </p>
+
+        <p>
+          The website does not use advertising trackers, visitor accounts,
+          or a custom contact-form database. Analytics requests are
+          processed by Cloudflare, and privacy tools or browser settings
+          may block them.
+        </p>
+
+        <p>
+          The website's main content and navigation remain available
+          without the analytics script.
         </p>
 
         <h2>Source code</h2>

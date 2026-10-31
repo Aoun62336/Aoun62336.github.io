@@ -4,6 +4,8 @@ import { getCollection } from "astro:content";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import ArchitectureExplorer from "../components/ArchitectureExplorer.astro";
+import RecruiterSnapshot from "../components/RecruiterSnapshot.astro";
 
 import portrait from "../assets/aoun-portrait.png";
 
@@ -26,9 +28,10 @@ const projects = (await getCollection("projects")).sort(
         </h1>
 
         <p class="hero-description">
-          I work with AWS infrastructure, containers, Kubernetes, CI/CD, and
-          automation. My projects focus on how applications are built, deployed,
-          secured, and operated.
+          I focus on cloud infrastructure, container delivery, and automation.
+          My work centers on AWS, Terraform, Kubernetes, and CI/CD pipelines,
+          with an emphasis on building systems that are simple to deploy,
+          secure, and maintain.
         </p>
 
         <div class="hero-actions">
@@ -39,11 +42,10 @@ const projects = (await getCollection("projects")).sort(
 
           <a
             class="button button-secondary"
-            href="https://github.com/Aoun62336"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/resume/Aoun_MD_Resume.pdf"
+            download="Aoun_MD_Resume.pdf"
           >
-            View GitHub
+            Download resume
             <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -79,6 +81,8 @@ const projects = (await getCollection("projects")).sort(
     </div>
   </section>
 
+  <RecruiterSnapshot />
+
   <section class="section section-border" id="work">
     <div class="container">
       <div class="section-heading" data-reveal>
@@ -105,10 +109,12 @@ const projects = (await getCollection("projects")).sort(
     </div>
   </section>
 
+  <ArchitectureExplorer />
+
   <section class="section section-border">
     <div class="container">
       <div class="section-heading" data-reveal>
-        <p class="eyebrow">02 / HOW I WORK</p>
+        <p class="eyebrow">03 / HOW I WORK</p>
 
         <h2>
           Engineering across the
@@ -131,6 +137,14 @@ const projects = (await getCollection("projects")).sort(
             AWS networking, EC2, EKS, RDS, IAM, S3, and Terraform infrastructure
             definitions.
           </p>
+
+          <a
+            class="expertise-evidence"
+            href="/work/assemblemonitor/"
+          >
+            See AWS implementation
+            <span aria-hidden="true">↗</span>
+          </a>
         </article>
 
         <article class="expertise-card" data-reveal>
@@ -142,6 +156,14 @@ const projects = (await getCollection("projects")).sort(
             GitHub Actions, Jenkins, Docker, security checks, Helm, and Argo CD
             deployment workflows.
           </p>
+
+          <a
+            class="expertise-evidence"
+            href="/work/renewgrid/"
+          >
+            See delivery engineering
+            <span aria-hidden="true">↗</span>
+          </a>
         </article>
 
         <article class="expertise-card" data-reveal>
@@ -153,6 +175,14 @@ const projects = (await getCollection("projects")).sort(
             Health checks, logs, metrics, traces, deployment verification, and
             structured troubleshooting.
           </p>
+
+          <a
+            class="expertise-evidence"
+            href="/work/assemblemonitor/"
+          >
+            See observability work
+            <span aria-hidden="true">↗</span>
+          </a>
         </article>
       </div>
     </div>
@@ -161,7 +191,7 @@ const projects = (await getCollection("projects")).sort(
   <section class="section section-border">
     <div class="container info-grid">
       <div data-reveal>
-        <p class="eyebrow">03 / A LITTLE ABOUT ME</p>
+        <p class="eyebrow">04 / A LITTLE ABOUT ME</p>
 
         <h2 class="page-title">
           An engineer who likes to understand
@@ -171,16 +201,16 @@ const projects = (await getCollection("projects")).sort(
 
       <div data-reveal>
         <p class="page-description">
-          I'm an MCA graduate with software development and cloud support
-          internship experience. I've also worked on independent Cloud and
-          DevOps implementations, including AWS infrastructure, Kubernetes
-          deployments, CI/CD pipelines, and monitoring.
+          I started out writing application code before moving deeper into
+          infrastructure and delivery pipelines. That background helps me understand
+          both sides: how developers write code and what it takes to run and
+          monitor that code reliably in production.
         </p>
 
         <p class="text-muted">
-          I'm looking for an opportunity where I can contribute to
-          infrastructure and delivery work while learning from engineers with
-          real operational experience.
+          I enjoy automating manual steps, setting up clean CI/CD workflows, and
+          troubleshooting systems when unexpected issues occur. I am looking for a
+          role where I can contribute to real delivery work and learn from senior engineers.
         </p>
 
         <a class="button button-secondary" href="/about/">

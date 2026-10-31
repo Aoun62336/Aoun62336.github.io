@@ -1,0 +1,135 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const articles = [
+  {
+    category: "TERRAFORM / INFRASTRUCTURE",
+    title: "How Terraform Decides What to Create",
+    description:
+      "Understanding configuration, state, dependency graphs, execution planning, and resource ordering.",
+    href: "/notes/terraform-execution/",
+  },
+  {
+    category: "CI/CD / GITOPS",
+    title: "Why Jenkins Builds and Argo CD Deploys",
+    description:
+      "Understanding the responsibility boundary between artifact production, Git-managed desired state, and Kubernetes reconciliation.",
+    href: "/notes/jenkins-argocd-gitops/",
+  },
+];
+---
+
+<BaseLayout
+  title="Engineering Notes | Aoun Md."
+  description="Practical explanations of Terraform infrastructure execution and Kubernetes GitOps delivery, based on engineering work."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">ENGINEERING NOTES</p>
+
+      <h1 class="page-title">
+        Understanding
+        <span class="serif-accent">how systems work.</span>
+      </h1>
+
+      <p class="page-description">
+        Notes about infrastructure, application delivery,
+        and the decisions behind the tools I work with.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-border">
+    <div class="container notes-grid">
+      {
+        articles.map((article, index) => (
+          <article class="notes-card">
+            <span class="eyebrow">
+              {String(index + 1).padStart(2, "0")} / {article.category}
+            </span>
+
+            <h2>{article.title}</h2>
+
+            <p>{article.description}</p>
+
+            <a href={article.href}>
+              Read article
+              <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .notes-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(24px, 4vw, 44px);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+  }
+
+  .notes-card h2 {
+    margin: 28px 0 16px;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    font-weight: 500;
+    line-height: 1.16;
+    letter-spacing: -0.05em;
+  }
+
+  .notes-card p {
+    color: var(--muted);
+  }
+
+  .notes-card a {
+    display: inline-flex;
+    gap: 12px;
+    width: fit-content;
+    margin-top: auto;
+    padding-top: 28px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--plum);
+    font-size: 0.88rem;
+  }
+
+  .notes-card a span {
+    color: var(--plum);
+  }
+
+  @media (max-width: 700px) {
+    .notes-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .page-title {
+      font-size: clamp(2.1rem, 9vw, 2.8rem);
+    }
+
+    .notes-card {
+      padding: 20px;
+    }
+
+    .notes-card .eyebrow {
+      letter-spacing: 0.075em;
+      overflow-wrap: break-word;
+    }
+
+    .notes-card h2 {
+      font-size: clamp(1.4rem, 6vw, 1.8rem);
+    }
+  }
+</style>
+

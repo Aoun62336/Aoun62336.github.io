@@ -22,15 +22,13 @@ source: "https://github.com/Aoun62336/AssembleMonitor-DevOps"
 
 ## Context
 
-AssembleMonitor is a construction management application with a React frontend, a FastAPI backend, and PostgreSQL storage.
+AssembleMonitor is a construction management application built with React, FastAPI, and PostgreSQL.
 
-I contributed to the application during my software development internship at Noorisys Technologies. After that work, I independently developed the AWS infrastructure and DevOps implementation documented in the repository.
-
-The engineering focus was to define the infrastructure in code, automate application delivery, introduce security controls, and make the deployed system easier to observe.
+My initial internship at Noorisys Technologies focused on building the application features and database interactions. After that work, I used the project to implement a complete production environment on AWS from scratch: automating infrastructure with Terraform, setting up GitOps with Jenkins and Argo CD, and configuring OpenTelemetry observability.
 
 ## AWS infrastructure
 
-I used Terraform to define AWS resources and Kubernetes infrastructure.
+I used Terraform to define AWS resources and Kubernetes infrastructure. The deployment reused the account's default VPC and created supporting subnet, routing, and security configurations within that environment.
 
 The EKS architecture includes:
 
@@ -94,9 +92,25 @@ The observability work covers:
 - Tempo traces.
 - Health checks and Kubernetes workload configuration.
 
-I also documented controlled fault drills to inspect application behavior during selected database, API, and DNS failures.
+I also performed controlled database, API, and DNS-failure drills in a **local Docker Compose environment**. These exercises were used to investigate application behavior, identify failure symptoms, and document recovery procedures.
 
-These drills are engineering validation exercises, not evidence of a live production incident or a guaranteed service-level objective.
+The local fault drills are separate from the AWS EKS implementation. Their results should not be interpreted as evidence of EKS recovery behavior or continuous production availability.
+
+The AWS observability configuration defines telemetry collection and exporters for logs, traces, and metrics. Configuration alone does not establish that every intended application metric was successfully collected and displayed.
+
+## Engineering challenge: separating release preparation from deployment
+
+The project needed a clear boundary between building a release and applying that release to Kubernetes.
+
+A pipeline that directly changes cluster workloads can combine artifact creation, approval, and deployment permissions in one execution path.
+
+For the primary EKS workflow, I separated those responsibilities. Jenkins performs the required checks, builds and publishes images, and updates the approved Helm configuration in Git. Argo CD then reconciles the desired application state to EKS.
+
+This makes it possible to inspect which image reference was approved independently of the Jenkins execution.
+
+The repository includes the Jenkins pipeline and GitOps configuration used to implement this separation.
+
+[Inspect the Jenkins GitOps pipeline](https://github.com/Aoun62336/AssembleMonitor-DevOps/blob/main/Jenkinsfile-gitops)
 
 ## Engineering decisions
 

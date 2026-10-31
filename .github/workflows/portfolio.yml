@@ -24,6 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    env:
+      PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN }}
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v7
@@ -43,6 +46,25 @@ jobs:
       - name: Build static website
         run: npm run build
 
+      - name: Check generated release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f dist/index.html
+          test -f dist/work/assemblemonitor/index.html
+          test -f dist/work/renewgrid/index.html
+          test -f dist/work/callmissed/index.html
+
+          test -f dist/notes/index.html
+          test -f dist/about/index.html
+          test -f dist/site/index.html
+
+          test -f dist/resume/Aoun_MD_Resume.pdf
+          test -f dist/og/home.png
+
+          echo "Required release assets exist."
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
@@ -53,7 +75,9 @@ jobs:
     name: Build Release Artifact
     needs: validate
 
-    if: github.event_name != 'pull_request'
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/master'
 
     runs-on: ubuntu-latest
 
@@ -67,12 +91,18 @@ jobs:
 
       - name: Build and upload Astro website
         uses: withastro/action@v6
+        env:
+          PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN }}
         with:
           node-version: 24
 
   deploy:
     name: Publish Portfolio
     needs: build
+
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/master'
 
     runs-on: ubuntu-latest
 
@@ -89,3 +119,45 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Verify public website
+        shell: bash
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+
+          SITE="${SITE_URL%/}"
+
+          for path in \
+            "" \
+            "work/" \
+            "work/assemblemonitor/" \
+            "work/renewgrid/" \
+            "work/callmissed/" \
+            "notes/" \
+            "about/" \
+            "site/" \
+            "resume/Aoun_MD_Resume.pdf" \
+            "og/home.png"
+          do
+            URL="$SITE/$path"
+
+            echo "Checking $URL"
+
+            curl \
+              --fail \
+              --silent \
+              --show-error \
+              --location \
+              --retry 7 \
+              --retry-delay 5 \
+              --retry-all-errors \
+              --max-time 20 \
+              --output /dev/null \
+              "$URL"
+
+            echo "OK: $path"
+          done
+
+          echo "Public deployment smoke checks passed."

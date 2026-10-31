@@ -8,18 +8,28 @@ import "../styles/global.css";
 
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import DiagramLightbox from "../components/DiagramLightbox.astro";
 
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 
 const {
   title = "Aoun Md. | Cloud & DevOps Engineer",
   description = "The personal engineering portfolio of Aoun Md. Explore AWS infrastructure, Kubernetes, Terraform, CI/CD, GitOps, and observability projects.",
+  ogImage = "/og/home.png",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(
+  ogImage,
+  Astro.site,
+).toString();
+
+const analyticsToken =
+  import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -38,12 +48,26 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:site_name" content="Aoun Md." />
+    <meta property="og:image" content={socialImageURL} />
+    <meta
+      property="og:image:alt"
+      content={`Social preview for ${title}`}
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+    <meta
+      name="twitter:image:alt"
+      content={`Social preview for ${title}`}
+    />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" sizes="any" />
   </head>
 
   <body>
@@ -56,6 +80,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <Footer />
+
+    <DiagramLightbox />
 
     <script>
       const prefersReducedMotion = window.matchMedia(
@@ -91,6 +117,60 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           }
         });
       }
+
+      // Case-study reading progress.
+      // Only runs on pages that contain the progress indicator.
+
+      const progressBar = document.querySelector<HTMLElement>(
+        ".reading-progress__bar",
+      );
+
+      if (progressBar) {
+        let frameRequested = false;
+
+        const updateReadingProgress = () => {
+          const documentHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+
+          const progress =
+            documentHeight > 0
+              ? Math.min(1, Math.max(0, window.scrollY / documentHeight))
+              : 1;
+
+          progressBar.style.transform = `scaleX(${progress})`;
+
+          frameRequested = false;
+        };
+
+        const scheduleProgressUpdate = () => {
+          if (frameRequested) return;
+
+          frameRequested = true;
+
+          window.requestAnimationFrame(updateReadingProgress);
+        };
+
+        window.addEventListener("scroll", scheduleProgressUpdate, {
+          passive: true,
+        });
+
+        window.addEventListener("resize", scheduleProgressUpdate);
+
+        scheduleProgressUpdate();
+      }
     </script>
+
+    {
+      analyticsToken && (
+        <script
+          is:inline
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({
+            token: analyticsToken,
+          })}
+        ></script>
+      )
+    }
   </body>
 </html>

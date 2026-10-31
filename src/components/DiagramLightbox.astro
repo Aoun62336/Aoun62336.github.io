@@ -1,0 +1,339 @@
+<dialog
+  id="diagram-lightbox"
+  class="diagram-lightbox"
+  aria-label="Architecture diagram viewer"
+>
+  <div class="diagram-lightbox__shell">
+    <header class="diagram-lightbox__toolbar">
+      <div class="diagram-lightbox__identity">
+        <strong>Architecture viewer</strong>
+        <span data-zoom-level>100%</span>
+      </div>
+
+      <span
+        class="diagram-lightbox__status"
+        data-zoom-status
+        role="status"
+        aria-live="polite"
+      ></span>
+
+      <div class="diagram-lightbox__controls">
+        <button type="button" data-zoom-out aria-label="Zoom out"> − </button>
+
+        <button type="button" data-zoom-reset aria-label="Reset zoom">
+          Reset
+        </button>
+
+        <button type="button" data-zoom-in aria-label="Zoom in"> + </button>
+
+        <button type="button" data-zoom-close aria-label="Close diagram">
+          ×
+        </button>
+      </div>
+    </header>
+
+    <div
+      class="diagram-lightbox__viewport"
+      data-zoom-viewport
+      tabindex="0"
+      role="region"
+      aria-label="Scrollable architecture diagram"
+    >
+      <img data-zoom-image alt="" width="1200" />
+    </div>
+
+    <footer class="diagram-lightbox__footer">
+      <span> Zoom in to inspect details. Scroll or swipe to pan. </span>
+
+      <a data-zoom-original href="#" target="_blank" rel="noopener noreferrer">
+        Open original image ↗
+      </a>
+    </footer>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("#diagram-lightbox");
+
+  const viewport = dialog?.querySelector<HTMLElement>("[data-zoom-viewport]");
+
+  const image = dialog?.querySelector<HTMLImageElement>("[data-zoom-image]");
+
+  const zoomLabel = dialog?.querySelector<HTMLElement>("[data-zoom-level]");
+
+  const originalLink = dialog?.querySelector<HTMLAnchorElement>(
+    "[data-zoom-original]",
+  );
+
+  const status = dialog?.querySelector<HTMLElement>(
+    "[data-zoom-status]",
+  );
+
+  if (
+    dialog &&
+    viewport &&
+    image &&
+    zoomLabel &&
+    originalLink &&
+    status
+  ) {
+    let scale = 1;
+    let returnFocusTo: HTMLElement | null = null;
+
+    image.addEventListener("load", () => {
+      status.textContent = "Diagram loaded.";
+    });
+
+    image.addEventListener("error", () => {
+      status.textContent =
+        "The diagram could not be loaded. Use the original image link.";
+    });
+
+    const updateZoom = () => {
+      image.style.width = `${scale * 100}%`;
+
+      zoomLabel.textContent = `${Math.round(scale * 100)}%`;
+    };
+
+    const resetZoom = () => {
+      scale = 1;
+      updateZoom();
+      viewport.scrollTo({ top: 0, left: 0 });
+    };
+
+    const changeZoom = (amount: number) => {
+      scale = Math.max(1, Math.min(3, scale + amount));
+      updateZoom();
+    };
+
+    const zoomIn = dialog.querySelector<HTMLButtonElement>("[data-zoom-in]");
+
+    const zoomOut = dialog.querySelector<HTMLButtonElement>("[data-zoom-out]");
+
+    const zoomReset =
+      dialog.querySelector<HTMLButtonElement>("[data-zoom-reset]");
+
+    const closeButton =
+      dialog.querySelector<HTMLButtonElement>("[data-zoom-close]");
+
+    zoomIn?.addEventListener("click", () => changeZoom(0.5));
+
+    zoomOut?.addEventListener("click", () => changeZoom(-0.5));
+
+    zoomReset?.addEventListener("click", resetZoom);
+
+    closeButton?.addEventListener("click", () => dialog.close());
+
+    document.addEventListener("click", (event: MouseEvent) => {
+      const target = event.target;
+
+      if (!(target instanceof Element)) return;
+
+      const link = target.closest<HTMLAnchorElement>(
+        ".engineering-evidence__image-link, .architecture-explorer__image-link",
+      );
+
+      if (!link) return;
+
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      returnFocusTo = link;
+      status.textContent = "Loading diagram.";
+
+      const sourceImage = link.querySelector<HTMLImageElement>("img");
+
+      image.src = link.href;
+      image.alt = sourceImage?.alt ?? "Architecture diagram";
+
+      originalLink.href = link.href;
+
+      resetZoom();
+      dialog.showModal();
+    });
+
+    viewport.addEventListener("keydown", (event) => {
+      const amount = 80;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          viewport.scrollLeft -= amount;
+          break;
+
+        case "ArrowRight":
+          viewport.scrollLeft += amount;
+          break;
+
+        case "ArrowUp":
+          viewport.scrollTop -= amount;
+          break;
+
+        case "ArrowDown":
+          viewport.scrollTop += amount;
+          break;
+
+        default:
+          return;
+      }
+
+      event.preventDefault();
+    });
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    });
+
+    dialog.addEventListener("close", () => {
+      image.removeAttribute("src");
+      image.alt = "";
+      status.textContent = "";
+      resetZoom();
+
+      const previousFocus = returnFocusTo;
+      returnFocusTo = null;
+
+      if (previousFocus?.isConnected) {
+        previousFocus.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .diagram-lightbox {
+    width: min(1200px, calc(100vw - 24px));
+    max-width: none;
+    height: min(900px, calc(100dvh - 24px));
+    max-height: none;
+    padding: 0;
+    border: 1px solid rgba(216, 155, 176, 0.5);
+    border-radius: 16px;
+    background: #17151a;
+    color: #f5f0e9;
+  }
+
+  .diagram-lightbox::backdrop {
+    background: rgba(8, 7, 10, 0.86);
+  }
+
+  .diagram-lightbox__shell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .diagram-lightbox__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(245, 240, 233, 0.14);
+  }
+
+  .diagram-lightbox__identity strong {
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  .diagram-lightbox__identity span {
+    display: block;
+    margin-top: 4px;
+    color: #aab99d;
+    font-family: monospace;
+    font-size: 0.72rem;
+  }
+
+  .diagram-lightbox__controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .diagram-lightbox__controls button {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid rgba(245, 240, 233, 0.2);
+    border-radius: 8px;
+    background: #29242b;
+    color: #f5f0e9;
+    cursor: pointer;
+  }
+
+  .diagram-lightbox__controls button:hover,
+  .diagram-lightbox__controls button:focus-visible {
+    border-color: #d89bb0;
+  }
+
+  .diagram-lightbox__viewport {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 12px;
+    background: #e8e7e4;
+    overscroll-behavior: contain;
+  }
+
+  .diagram-lightbox__viewport img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+  }
+
+  .diagram-lightbox__footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    padding: 13px 18px;
+    border-top: 1px solid rgba(245, 240, 233, 0.14);
+    color: #c7c0c7;
+    font-size: 0.77rem;
+  }
+
+  .diagram-lightbox__footer a {
+    color: #d89bb0;
+  }
+
+  @media (max-width: 600px) {
+    .diagram-lightbox__toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .diagram-lightbox__controls {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .diagram-lightbox__viewport {
+      padding: 6px;
+    }
+  }
+  .diagram-lightbox__status {
+    color: #aab99d;
+    font-size: 0.76rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 600px) {
+    .diagram-lightbox__status {
+      font-size: 0.7rem;
+    }
+  }
+</style>
