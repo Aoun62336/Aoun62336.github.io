@@ -27,6 +27,9 @@ const socialImageURL = new URL(
   ogImage,
   Astro.site,
 ).toString();
+
+const analyticsToken =
+  import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -156,5 +159,18 @@ const socialImageURL = new URL(
         scheduleProgressUpdate();
       }
     </script>
+
+    {
+      analyticsToken && (
+        <script
+          is:inline
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({
+            token: analyticsToken,
+          })}
+        ></script>
+      )
+    }
   </body>
 </html>

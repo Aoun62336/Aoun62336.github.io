@@ -30,6 +30,9 @@ const routes = [
   '/work/assemblemonitor/',
   '/work/renewgrid/',
   '/work/callmissed/',
+  '/notes/',
+  '/notes/terraform-execution/',
+  '/notes/jenkins-argocd-gitops/',
   '/about/',
   '/site/',
 ];
@@ -608,5 +611,151 @@ test("architecture explorer does not overflow mobile screens", async ({
       overflow,
       `Unexpected page overflow at ${width}px`,
     ).toBeLessThanOrEqual(1);
+  }
+});
+
+test("engineering summaries provide explanations and evidence links", async ({
+  page,
+}) => {
+  for (const project of [
+    "assemblemonitor",
+    "renewgrid",
+    "callmissed",
+  ]) {
+    await page.goto(`/work/${project}/`);
+
+    const story = page.locator("#engineering-summary");
+
+    await expect(story).toBeVisible();
+
+    await expect(
+      story.getByRole("heading", {
+        name: "What problem needed solving?",
+      }),
+    ).toBeVisible();
+
+    await expect(
+      story.getByRole("heading", {
+        name: "How was it verified?",
+      }),
+    ).toBeVisible();
+
+    const evidenceLinks = story.locator(
+      ".engineering-story__links a",
+    );
+
+    expect(await evidenceLinks.count()).toBeGreaterThanOrEqual(3);
+
+    for (const link of await evidenceLinks.all()) {
+      const href = await link.getAttribute("href");
+
+      expect(href).toMatch(/^https:\/\/github\.com\//);
+    }
+  }
+});
+
+test("engineering notes load and contain useful technical sections", async ({
+  page,
+}) => {
+  const articles = [
+    {
+      route: "/notes/terraform-execution/",
+      heading: "How Terraform Decides What to Create",
+    },
+    {
+      route: "/notes/jenkins-argocd-gitops/",
+      heading: "Why Jenkins Builds and Argo CD Deploys",
+    },
+  ];
+
+  for (const article of articles) {
+    const response = await page.goto(article.route);
+
+    expect(response?.status()).toBe(200);
+
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: article.heading,
+      }),
+    ).toBeVisible();
+
+    const sections = page.locator(".case-article h2");
+
+    expect(await sections.count()).toBeGreaterThanOrEqual(4);
+  }
+});
+
+test("diagram viewer opens, zooms, and closes", async ({
+  page,
+}) => {
+  await page.goto("/work/renewgrid/");
+
+  const firstDiagram = page.locator(
+    ".engineering-evidence__image-link",
+  ).first();
+
+  await firstDiagram.click();
+
+  const dialog = page.getByRole("dialog", {
+    name: "Architecture diagram viewer",
+  });
+
+  await expect(dialog).toBeVisible();
+
+  await dialog.getByRole("button", {
+    name: "Zoom in",
+  }).click();
+
+  await expect(
+    dialog.locator("[data-zoom-level]"),
+  ).toHaveText("150%");
+
+  await dialog.getByRole("button", {
+    name: "Reset zoom",
+  }).click();
+
+  await expect(
+    dialog.locator("[data-zoom-level]"),
+  ).toHaveText("100%");
+
+  await page.keyboard.press("Escape");
+
+  await expect(dialog).not.toBeVisible();
+});
+
+test("notes and engineering stories do not overflow mobile screens", async ({
+  page,
+}) => {
+  const routes = [
+    "/notes/",
+    "/notes/terraform-execution/",
+    "/notes/jenkins-argocd-gitops/",
+    "/work/assemblemonitor/",
+    "/work/renewgrid/",
+    "/work/callmissed/",
+  ];
+
+  for (const width of [320, 360, 390, 768]) {
+    await page.setViewportSize({
+      width,
+      height: 800,
+    });
+
+    for (const route of routes) {
+      await page.goto(route);
+
+      const overflow = await page.evaluate(() => {
+        return (
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth
+        );
+      });
+
+      expect(
+        overflow,
+        `Horizontal overflow on ${route} at ${width}px`,
+      ).toBeLessThanOrEqual(1);
+    }
   }
 });

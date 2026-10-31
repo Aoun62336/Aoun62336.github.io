@@ -112,5 +112,24 @@ const articles = [
       grid-template-columns: 1fr;
     }
   }
+
+  @media (max-width: 600px) {
+    .page-title {
+      font-size: clamp(2.1rem, 9vw, 2.8rem);
+    }
+
+    .notes-card {
+      padding: 20px;
+    }
+
+    .notes-card .eyebrow {
+      letter-spacing: 0.075em;
+      overflow-wrap: break-word;
+    }
+
+    .notes-card h2 {
+      font-size: clamp(1.4rem, 6vw, 1.8rem);
+    }
+  }
 </style>
 
