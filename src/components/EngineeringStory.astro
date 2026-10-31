@@ -25,19 +25,19 @@ const stories: Record<string, Story> = {
     title: "AssembleMonitor",
 
     problem:
-      "The application needed a repeatable way to provision its cloud infrastructure, deliver container changes, and investigate workload behavior.",
+      "The construction management application needed a documented AWS deployment model, automated container delivery, security boundaries, and ways to investigate workload behavior.",
 
     built:
-      "Terraform-managed AWS infrastructure, EKS workloads, a Jenkins release pipeline, GitOps reconciliation through Argo CD, and an observability stack.",
+      "Independently defined AWS infrastructure and EKS workloads with Terraform, implemented Jenkins release preparation and Argo CD reconciliation, and configured Kubernetes security and observability components.",
 
     reason:
-      "Terraform keeps infrastructure definitions reviewable. GitOps separates image publication from cluster deployment. Metrics, logs, and traces provide complementary operational evidence.",
+      "Terraform makes infrastructure changes reviewable. GitOps separates image publication from deployment reconciliation. Workload identity, network boundaries, and separate telemetry backends address different operational concerns.",
 
     verification:
-      "The repository contains architecture records, pipeline evidence, Argo CD synchronization screenshots, health checks, and controlled operational exercises.",
+      "The repository records infrastructure validation, pipeline execution, Argo CD synchronization, health checks, and controlled database, API, and DNS-failure exercises in a separate local Docker Compose environment.",
 
     limitation:
-      "The AWS deployment was a documented engineering implementation, not a claim of continuously running production availability.",
+      "The Terraform deployment reused the AWS default VPC. Local Compose fault-drill results do not establish EKS recovery behavior, and configured telemetry components do not by themselves prove complete production monitoring coverage.",
 
     evidence: [
       {
@@ -59,19 +59,19 @@ const stories: Record<string, Story> = {
     title: "RenewGrid",
 
     problem:
-      "The same full-stack application needed reliable validation, container publication, and repeatable deployment across different engineering workflows.",
+      "RenewGrid, an e-waste management application, needed repeatable validation and delivery workflows. I used the same application to investigate CI failures, container security findings, deployment dependencies, and infrastructure lifecycle management.",
 
     built:
-      "GitHub Actions and Jenkins pipelines, GHCR and Docker Hub image publication, Compose-based verification, and a Terraform-managed local deployment.",
+      "Implemented separate GitHub Actions and Jenkins delivery paths, published images to GHCR and Docker Hub, verified Compose deployments, and managed a local Compose project with Terraform's Docker provider.",
 
     reason:
-      "The workflows demonstrate repository-native and self-managed CI/CD separately. Docker Compose fits the application's deployment scope, while Terraform provides declarative lifecycle management.",
+      "GitHub Actions provided repository-native automation, while Jenkins provided experience with a self-managed EC2 build environment. Compose matched the application's deployment scope, and Terraform demonstrated declarative management of the local environment.",
 
     verification:
-      "Jenkins Build #7 succeeded on October 24, 2026. The documented run includes 26 passing backend tests, security checks, SBOM generation, image publication, and deployment verification.",
+      "The October 24, 2026 Jenkins Build #7 record shows 26 passing backend tests, frontend validation, configured security gates, SBOM generation, image publication, and deployment checks. Terraform records document planning, applying, reconciliation, and teardown.",
 
     limitation:
-      "The GitHub Actions, Jenkins, and Terraform paths are separate implementations. Terraform manages local Docker resources, not AWS infrastructure.",
+      "The three delivery implementations are separate. The Terraform project manages local Docker Compose resources, not AWS infrastructure. Recorded test and scan results apply to their specific executions.",
 
     evidence: [
       {
@@ -97,19 +97,19 @@ const stories: Record<string, Story> = {
     title: "CallMissed AI Workspace",
 
     problem:
-      "The application needed a deployable backend for external AI services while controlling credentials, paid API usage, and deployment failures without maintaining a dedicated application server.",
+      "The AI workspace needed a controlled way to access external provider services, manage paid requests and secrets, and deploy the backend without maintaining a dedicated application server.",
 
     built:
-      "A React and FastAPI application packaged for AWS Lambda, Terraform infrastructure, GitHub OIDC deployment, ECR images, reviewer access controls, and health-based rollback.",
+      "Implemented React and FastAPI application integration, AWS Lambda container deployment, Terraform infrastructure, GitHub OIDC authentication, ECR image publication, access controls, health checks, and previous-image rollback logic.",
 
     reason:
-      "Lambda reduces server management for this deployment model. OIDC avoids long-lived AWS deployment keys. Immutable image digests and recorded previous images support traceable releases and recovery.",
+      "Expected traffic was low and intermittent, making Lambda suitable for the deployment model. The application did not require a persistent database or private VPC resources. OIDC avoided long-lived AWS deployment keys, and immutable image references improved traceability.",
 
     verification:
-      "The project records 19 passing backend tests, health checks, chat/image/voice smoke tests, and a successful rollback and restoration drill.",
+      "The project records 19 passing backend tests, provider smoke checks, and a previous-image rollback and restoration exercise. The automated health-failure rollback branch is implemented in the workflow, but the cited exercise does not establish that this exact failure-triggered branch was executed.",
 
     limitation:
-      "External AI operations depend on provider access. The reviewer gate is an application-level control, and the rollback mechanism does not cover every possible failure.",
+      "The workspace depends on an external AI provider. Access protection is application-level, ambiguous paid requests are not automatically retried, and the implemented rollback path does not cover every possible deployment or runtime failure.",
 
     evidence: [
       {

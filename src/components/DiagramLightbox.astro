@@ -10,6 +10,13 @@
         <span data-zoom-level>100%</span>
       </div>
 
+      <span
+        class="diagram-lightbox__status"
+        data-zoom-status
+        role="status"
+        aria-live="polite"
+      ></span>
+
       <div class="diagram-lightbox__controls">
         <button type="button" data-zoom-out aria-label="Zoom out"> − </button>
 
@@ -58,8 +65,29 @@
     "[data-zoom-original]",
   );
 
-  if (dialog && viewport && image && zoomLabel && originalLink) {
+  const status = dialog?.querySelector<HTMLElement>(
+    "[data-zoom-status]",
+  );
+
+  if (
+    dialog &&
+    viewport &&
+    image &&
+    zoomLabel &&
+    originalLink &&
+    status
+  ) {
     let scale = 1;
+    let returnFocusTo: HTMLElement | null = null;
+
+    image.addEventListener("load", () => {
+      status.textContent = "Diagram loaded.";
+    });
+
+    image.addEventListener("error", () => {
+      status.textContent =
+        "The diagram could not be loaded. Use the original image link.";
+    });
 
     const updateZoom = () => {
       image.style.width = `${scale * 100}%`;
@@ -120,6 +148,9 @@
 
       event.preventDefault();
 
+      returnFocusTo = link;
+      status.textContent = "Loading diagram.";
+
       const sourceImage = link.querySelector<HTMLImageElement>("img");
 
       image.src = link.href;
@@ -167,7 +198,15 @@
     dialog.addEventListener("close", () => {
       image.removeAttribute("src");
       image.alt = "";
+      status.textContent = "";
       resetZoom();
+
+      const previousFocus = returnFocusTo;
+      returnFocusTo = null;
+
+      if (previousFocus?.isConnected) {
+        previousFocus.focus();
+      }
     });
   }
 </script>
@@ -284,6 +323,17 @@
 
     .diagram-lightbox__viewport {
       padding: 6px;
+    }
+  }
+  .diagram-lightbox__status {
+    color: #aab99d;
+    font-size: 0.76rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 600px) {
+    .diagram-lightbox__status {
+      font-size: 0.7rem;
     }
   }
 </style>

@@ -42,7 +42,8 @@ const preview = previews[projectId as keyof typeof previews];
         <Image
           src={preview.image}
           alt={preview.alt}
-          width={1100}
+          widths={[360, 600, 900, 1100]}
+          sizes="(max-width: 760px) calc(100vw - 36px), (max-width: 1200px) 50vw, 520px"
           format="webp"
           quality={82}
           loading="lazy"

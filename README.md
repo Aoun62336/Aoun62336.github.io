@@ -104,7 +104,8 @@ The website includes:
 - A professional introduction and downloadable resume.
 - Dedicated engineering case studies for AssembleMonitor, RenewGrid, and CallMissed AI Workspace.
 - Source-backed architecture diagrams and project evidence.
-- An interactive architecture explorer for AssembleMonitor.
+- An interactive architecture explorer for AssembleMonitor and a full-resolution image viewer.
+- Two engineering notes on Terraform execution and Jenkins/Argo CD GitOps.
 - Professional experience, education, and selected credentials.
 
 The project descriptions distinguish documented implementation from live production operation.
@@ -141,9 +142,45 @@ These checks cover the Astro project, static build, navigation, accessibility, r
 
 ## Deployment
 
-GitHub Actions validates and publishes the static Astro output to GitHub Pages.
+Astro generates the website as static pages. GitHub Actions validates and publishes the output to GitHub Pages.
+
+Cloudflare Web Analytics is optional and enabled through the `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` build variable.
 
 No backend, database, or continuously running cloud infrastructure is required for the portfolio itself.
+
+## Engineering evidence
+
+The portfolio case studies document:
+
+- The problem being addressed.
+- The implementation and engineering decisions.
+- The environment in which work was performed.
+- Recorded testing and verification results.
+- Limitations of the implementation.
+
+The repositories contain source code, workflow definitions,
+infrastructure configuration, and selected execution evidence.
+
+Historical test results describe the recorded executions, not
+continuous production reliability.
+
+## Release validation
+
+Pull requests targeting `master` run Astro diagnostics,
+the static build, browser tests, and automated accessibility checks.
+
+Production publication is restricted to `master`.
+
+After GitHub Pages deployment, the workflow checks important
+public routes, the downloadable resume, and a social-preview asset.
+
+## Maintenance
+
+Dependency update pull requests are reviewed through Dependabot.
+Changes should pass the established checks before being merged.
+
+The website uses static hosting and does not require a permanent
+application server or database.
 
 ## Contact
 

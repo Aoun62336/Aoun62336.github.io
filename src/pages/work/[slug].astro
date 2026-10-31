@@ -82,17 +82,25 @@ const { Content, headings } = await render(entry);
 
     <EngineeringStory projectId={entry.id} />
 
-    <EngineeringEvidence projectId={entry.id} />
+    <EngineeringEvidence
+      projectId={entry.id}
+      mode="primary"
+    />
 
-    <article class="case-article">
+    <article class="case-article" id="technical-details">
       <Content />
-
-      <div class="case-article__end">
-        <a href="#main" class="case-back-to-top">
-          <span aria-hidden="true">↑</span>
-          Back to top
-        </a>
-      </div>
     </article>
+
+    <EngineeringEvidence
+      projectId={entry.id}
+      mode="supporting"
+    />
+
+    <div class="case-article__end">
+      <a href="#main" class="case-back-to-top">
+        <span aria-hidden="true">↑</span>
+        Back to top
+      </a>
+    </div>
   </section>
 </BaseLayout>

@@ -6,12 +6,18 @@ const pathname = Astro.url.pathname;
 
 const links = [
   { href: "/work/", label: "Work" },
+  { href: "/about/#experience", label: "Experience" },
   { href: "/notes/", label: "Notes" },
-  { href: "/about/", label: "About" },
-  { href: "/site/", label: "This Site" },
+  { href: "/resume/Aoun_MD_Resume.pdf", label: "Resume" },
 ];
 
-const isActive = (href: string) => pathname.startsWith(href);
+const isActive = (href: string) => {
+  if (href.endsWith(".pdf")) return false;
+
+  const route = href.split("#")[0];
+
+  return pathname.startsWith(route);
+};
 ---
 
 <header class="site-header">

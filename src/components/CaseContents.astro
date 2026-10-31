@@ -11,8 +11,27 @@ interface Props {
 
 const { headings } = Astro.props;
 
-// Show major article sections only.
-const sections = headings.filter((heading) => heading.depth === 2);
+const articleSections = headings
+  .filter((heading) => heading.depth === 2);
+
+const sections = [
+  {
+    depth: 2,
+    slug: "engineering-summary",
+    text: "Engineering summary",
+  },
+  {
+    depth: 2,
+    slug: "architecture",
+    text: "Primary architecture",
+  },
+  ...articleSections,
+  {
+    depth: 2,
+    slug: "verification-evidence",
+    text: "Supporting evidence",
+  },
+];
 ---
 
 {

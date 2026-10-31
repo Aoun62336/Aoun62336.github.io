@@ -70,7 +70,7 @@ test('project navigation works', async ({ page }) => {
   await page.goto('/work/');
 
   await page
-    .getByRole('link', { name: 'Read case study' })
+    .getByRole('link', { name: /^Read .* case study$/ })
     .first()
     .click();
 
@@ -104,10 +104,10 @@ test('mobile navigation works at 320px', async ({ page }) => {
     .getByRole('navigation', {
       name: 'Mobile navigation',
     })
-    .getByRole('link', { name: 'About' })
+    .getByRole('link', { name: 'Experience' })
     .click();
 
-  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(page).toHaveURL(/\/about\/#experience$/);
 });
 
 test('pages do not cause horizontal viewport overflow', async ({ page }) => {
@@ -758,4 +758,233 @@ test("notes and engineering stories do not overflow mobile screens", async ({
       ).toBeLessThanOrEqual(1);
     }
   }
+});
+
+test("every case-study contents link has a matching target", async ({
+  page,
+}) => {
+  const projects = [
+    "assemblemonitor",
+    "renewgrid",
+    "callmissed",
+  ];
+
+  for (const project of projects) {
+    await page.goto(`/work/${project}/`);
+
+    const contents = page.getByRole("navigation", {
+      name: "Case study contents",
+    });
+
+    await contents.locator("summary").click();
+
+    const links = contents.getByRole("link");
+
+    const count = await links.count();
+
+    expect(count).toBeGreaterThan(3);
+
+    for (let index = 0; index < count; index++) {
+      const href = await links.nth(index).getAttribute("href");
+
+      expect(href).toMatch(/^#[a-zA-Z0-9_-]+$/);
+
+      const target = page.locator(href!);
+
+      await expect(
+        target,
+        `Missing target ${href} in ${project}`,
+      ).toHaveCount(1);
+    }
+  }
+});
+
+
+test("case studies show primary architecture before the article", async ({
+  page,
+}) => {
+  for (const project of [
+    "assemblemonitor",
+    "renewgrid",
+    "callmissed",
+  ]) {
+    await page.goto(`/work/${project}/`);
+
+    const architecture = page.locator("#architecture");
+
+    const article = page.locator("#technical-details");
+
+    const evidence = page.locator("#verification-evidence");
+
+    await expect(architecture).toBeVisible();
+    await expect(article).toBeVisible();
+    await expect(evidence).toBeVisible();
+
+    const positions = await page.evaluate(() => {
+      const getY = (id: string) => {
+        const element = document.getElementById(id);
+
+        if (!element) return -1;
+
+        return element.getBoundingClientRect().top +
+          window.scrollY;
+      };
+
+      return {
+        architecture: getY("architecture"),
+        article: getY("technical-details"),
+        evidence: getY("verification-evidence"),
+      };
+    });
+
+    expect(positions.architecture).toBeLessThan(
+      positions.article,
+    );
+
+    expect(positions.article).toBeLessThan(
+      positions.evidence,
+    );
+
+    await expect(
+      page.locator(".engineering-evidence__image-link"),
+    ).toHaveCount(5);
+  }
+});
+
+
+test("diagram viewer returns focus after closing", async ({
+  page,
+}) => {
+  await page.goto("/work/assemblemonitor/");
+
+  const diagram = page.locator(
+    ".engineering-evidence__image-link",
+  ).first();
+
+  await diagram.focus();
+
+  await diagram.click();
+
+  const dialog = page.getByRole("dialog", {
+    name: "Architecture diagram viewer",
+  });
+
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press("Escape");
+
+  await expect(dialog).not.toBeVisible();
+
+  await expect(diagram).toBeFocused();
+});
+
+
+test("expanded mobile navigation passes accessibility checks", async ({
+  page,
+}) => {
+  await page.setViewportSize({
+    width: 360,
+    height: 800,
+  });
+
+  await page.goto("/");
+
+  const menu = page.locator(".mobile-nav");
+
+  await menu.locator("summary").click();
+
+  await expect(menu).toHaveAttribute("open", "");
+
+  const results = await new AxeBuilder({ page })
+    .withTags([
+      "wcag2a",
+      "wcag2aa",
+      "wcag21aa",
+      "wcag22aa",
+    ])
+    .analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+
+test("open diagram viewer passes accessibility checks", async ({
+  page,
+}) => {
+  await page.goto("/work/renewgrid/");
+
+  await page
+    .locator(".engineering-evidence__image-link")
+    .first()
+    .click();
+
+  const dialog = page.getByRole("dialog", {
+    name: "Architecture diagram viewer",
+  });
+
+  await expect(dialog).toBeVisible();
+
+  const results = await new AxeBuilder({ page })
+    .withTags([
+      "wcag2a",
+      "wcag2aa",
+      "wcag21aa",
+      "wcag22aa",
+    ])
+    .analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+
+test("portfolio content remains readable without JavaScript", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+  });
+
+  try {
+    const page = await context.newPage();
+
+    await page.goto(
+      "http://127.0.0.1:4321/work/assemblemonitor/",
+    );
+
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: "AssembleMonitor",
+      }),
+    ).toBeVisible();
+
+    await expect(
+      page.locator("#engineering-summary"),
+    ).toBeVisible();
+
+    await expect(
+      page.locator(".engineering-evidence__image-link").first(),
+    ).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
+
+test("reveal content remains visible in print mode", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await page.emulateMedia({
+    media: "print",
+  });
+
+  const firstCard = page.locator(".project-card").first();
+
+  const opacity = await firstCard.evaluate((element) => {
+    return getComputedStyle(element).opacity;
+  });
+
+  expect(Number(opacity)).toBe(1);
 });

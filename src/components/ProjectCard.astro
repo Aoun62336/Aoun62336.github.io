@@ -39,7 +39,11 @@ const number = String(index + 1).padStart(2, '0');
       }
     </div>
 
-    <a class="project-link" href={`/work/${project.id}/`}>
+    <a
+      class="project-link"
+      href={`/work/${project.id}/`}
+      aria-label={`Read ${project.data.title} case study`}
+    >
       Read case study
       <span aria-hidden="true">↗</span>
     </a>

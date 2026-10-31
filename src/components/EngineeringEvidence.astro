@@ -22,6 +22,7 @@ import callmissedChat from "../assets/project-media/callmissed-chat.png";
 
 interface Props {
   projectId: string;
+  mode?: "primary" | "supporting" | "all";
 }
 
 interface EvidenceItem {
@@ -31,7 +32,7 @@ interface EvidenceItem {
   alt: string;
 }
 
-const { projectId } = Astro.props;
+const { projectId, mode = "all" } = Astro.props;
 
 const galleries: Record<string, EvidenceItem[]> = {
   assemblemonitor: [
@@ -155,20 +156,48 @@ const galleries: Record<string, EvidenceItem[]> = {
   ],
 };
 
-const items = galleries[projectId] ?? [];
-const headingId = `engineering-evidence-${projectId}`;
+const allItems = galleries[projectId] ?? [];
+
+const items =
+  mode === "primary"
+    ? allItems.slice(0, 1)
+    : mode === "supporting"
+      ? allItems.slice(1)
+      : allItems;
+
+const sectionId =
+  mode === "primary"
+    ? "architecture"
+    : mode === "supporting"
+      ? "verification-evidence"
+      : `engineering-evidence-${projectId}`;
+
+const headingId = `${sectionId}-heading`;
+
+const sectionTitle =
+  mode === "primary"
+    ? "Architecture at a glance"
+    : mode === "supporting"
+      ? "Supporting engineering evidence"
+      : "Inside the engineering work";
+
+const sectionDescription =
+  mode === "primary"
+    ? "Start with the main system architecture. Open the diagram to inspect the complete implementation view."
+    : mode === "supporting"
+      ? "Additional architecture diagrams, delivery records, and application screenshots from the documented work."
+      : "Source-backed architecture diagrams and original application screenshots.";
 ---
 
 {
   items.length > 0 && (
-    <section class="engineering-evidence" aria-labelledby={headingId}>
+    <section id={sectionId} class="engineering-evidence" aria-labelledby={headingId}>
       <div class="engineering-evidence__heading" data-reveal>
-        <p class="engineering-evidence__eyebrow">VISUAL EVIDENCE</p>
-        <h2 id={headingId}>Inside the engineering work</h2>
-        <p>
-          Source-backed architecture diagrams and original application screenshots.
-          Open any image to inspect its details.
+        <p class="engineering-evidence__eyebrow">
+          {mode === "primary" ? "SYSTEM ARCHITECTURE" : "ENGINEERING EVIDENCE"}
         </p>
+        <h2 id={headingId}>{sectionTitle}</h2>
+        <p>{sectionDescription}</p>
       </div>
 
       <div class="engineering-evidence__list">
@@ -192,7 +221,8 @@ const headingId = `engineering-evidence-${projectId}`;
               <Image
                 src={item.image}
                 alt={item.alt}
-                width={1440}
+                widths={[480, 800, 1200, 1440]}
+                sizes="(max-width: 700px) calc(100vw - 48px), (max-width: 1200px) 88vw, 1050px"
                 format="webp"
                 quality={85}
                 loading="lazy"
