@@ -22,11 +22,9 @@ source: "https://github.com/Aoun62336/RenewGrid-Terraform-IaC"
 
 ## Context
 
-RenewGrid is an e-waste management application built with React, FastAPI, and PostgreSQL. Its application workflows cover recycling operations, including user accounts, e-waste listings, collection activities, and related management features.
+RenewGrid is an e-waste recycling platform built with React, FastAPI, and PostgreSQL.
 
-I used the application as a consistent baseline while working on several DevOps engineering areas: automated validation, container image publication, deployment verification, and infrastructure provisioning.
-
-Using the same application across multiple workflows made it easier to compare tools and troubleshoot actual pipeline problems.
+During my DevOps internship at Elevate Labs, I used this single codebase as a consistent testbed across three different delivery paths: GitHub Actions, an EC2-hosted Jenkins pipeline, and local Terraform Docker automation. Using the same application across all three environments made it easy to compare build speeds, security scans, and deployment behavior side by side.
 
 ## GitHub Actions and GHCR
 

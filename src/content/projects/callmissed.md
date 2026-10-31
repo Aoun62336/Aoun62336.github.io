@@ -22,13 +22,9 @@ source: "https://github.com/Aoun62336/CallMissed-Ai-Workspace"
 
 ## Context
 
-CallMissed AI Workspace is a React and TypeScript frontend backed by FastAPI.
+CallMissed AI Workspace is a browser application combining chat, image generation, and real-time voice sessions via external AI services.
 
-The application integrates with the CallMissed API and supports chat, image generation, and browser-based voice interactions.
-
-It originated as a take-home application exercise. The AWS infrastructure, container delivery, automated deployment, and related operational controls were implemented as independent engineering work.
-
-The deployment work explores a different operational model from AssembleMonitor: a container-based serverless backend instead of a managed Kubernetes cluster.
+While AssembleMonitor explored a dedicated Kubernetes cluster for always-on workloads, this project takes the opposite approach: running a containerized FastAPI backend on serverless AWS Lambda. The goal was to build a low-cost, on-demand architecture with automated OIDC deployments and verification rollbacks.
 
 ## Application architecture
 

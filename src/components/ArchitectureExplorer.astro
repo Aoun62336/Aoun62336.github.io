@@ -1,9 +1,9 @@
 ---
 import { Image } from "astro:assets";
 
-import awsDiagram from "../assets/project-media/assemblemonitor-aws.jpeg";
-import gitopsDiagram from "../assets/project-media/assemblemonitor-gitops.jpeg";
-import observabilityDiagram from "../assets/project-media/assemblemonitor-observability.jpeg";
+import awsDiagram from "../assets/project-media/assemblemonitor-aws.png";
+import gitopsDiagram from "../assets/project-media/assemblemonitor-gitops.png";
+import observabilityDiagram from "../assets/project-media/assemblemonitor-observability.png";
 
 const scenes = [
   {
@@ -44,14 +44,14 @@ const scenes = [
     number: "03",
     title: "How application behavior is investigated",
     description:
-      "Metrics, logs and traces provide different views of application and infrastructure behavior.",
+      "OpenTelemetry collects application traces, pod logs, Kubernetes metrics, and separate EC2 host metrics. The signals are routed to dedicated backends for investigation.",
     image: observabilityDiagram,
     alt:
-      "AssembleMonitor observability architecture showing OpenTelemetry, Prometheus-compatible metrics, Loki logs, Tempo traces and Grafana.",
+      "AssembleMonitor observability architecture. FastAPI traces flow through an OpenTelemetry DaemonSet to Tempo, pod logs to Loki, and Kubernetes metrics to Amazon Managed Prometheus. A separate collector scrapes external EC2 Node Exporters. Loki and Tempo use S3 storage, and Grafana queries the observability backends.",
     facts: [
-      "OpenTelemetry instrumentation and collection",
-      "Prometheus-compatible metrics, Loki logs and Tempo traces",
-      "Grafana dashboards and controlled reliability exercises",
+      "OTLP traces to Tempo and pod logs to Loki",
+      "Kubernetes and external EC2 metrics to Amazon Managed Prometheus",
+      "Grafana uses Loki, Tempo, and AMP as data sources",
     ],
   },
 ] as const;

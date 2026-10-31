@@ -22,11 +22,9 @@ source: "https://github.com/Aoun62336/AssembleMonitor-DevOps"
 
 ## Context
 
-AssembleMonitor is a construction management application with a React frontend, a FastAPI backend, and PostgreSQL storage.
+AssembleMonitor is a construction management application built with React, FastAPI, and PostgreSQL.
 
-I contributed to the application during my software development internship at Noorisys Technologies. After that work, I independently developed the AWS infrastructure and DevOps implementation documented in the repository.
-
-The engineering focus was to define the infrastructure in code, automate application delivery, introduce security controls, and make the deployed system easier to observe.
+My initial internship at Noorisys Technologies focused on building the application features and database interactions. After that work, I used the project to implement a complete production environment on AWS from scratch: automating infrastructure with Terraform, setting up GitOps with Jenkins and Argo CD, and configuring OpenTelemetry observability.
 
 ## AWS infrastructure
 
